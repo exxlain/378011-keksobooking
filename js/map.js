@@ -70,9 +70,10 @@ var createOffersArray = function (lengthArray) {
     return arr;
 };
 var offers = createOffersArray(8);
-console.log(offers);
+
 var mapWindow = document.querySelector('.map');
 mapWindow.classList.remove('map--faded');
+
 var pinsListElement = mapWindow.querySelector('.map__pins');
 var pinsElementTemplate = document.querySelector('template').content.querySelector('.map__pin');
 
@@ -80,8 +81,8 @@ var fillPin = function (pin) {
     var pinElement = pinsElementTemplate.cloneNode(true);
 
     pinElement.querySelector('.map__pin img').src = pin.author.avatar;
-    pinElement.style.left = pin.location.x - 20 + 'px';
-    pinElement.style.top = pin.location.y - 40 + 'px';
+    pinElement.style.left = pin.location.x - 5 + 'px';
+    pinElement.style.top = pin.location.y - 39 + 'px';
 
     return pinElement;
 };
@@ -94,6 +95,8 @@ var renderPins = function (arr) {
     pinsListElement.appendChild(fragment);
 };
 renderPins(offers);
+
+
 
 var mapFiltersElement = mapWindow.querySelector('.map__filters-container');
 var mapCardTemplate = document.querySelector('template').content.querySelector('.map__card');
@@ -112,15 +115,20 @@ var getOfferType = function (type) {
         }
     };
 
-    var renderFearures = function (arr, feaList) {
-        var fragment = document.createDocumentFragment();
-        for (var i = 0; i < arr.length; i++) {
-            var newLi = document.createElement('li');
-            newLi.className = 'feature feature--' + arr[i];
-            fragment.appendChild(newLi);
-        }
-        feaList.appendChild(fragment);
-    };
+
+var fillFeature = function (arr) {
+       var newLi = document.createElement('li');
+       newLi.className = 'feature feature--' + arr;
+       return newLi;
+};
+
+  var renderFeatures = function (arr, featureList) {
+    var fragment = document.createDocumentFragment();
+    for (var i = 0; i < arr.length; i++) {
+        fragment.appendChild(fillFeature(arr[i]));
+    }
+   featureList.appendChild(fragment);
+};
 
 var fillCard = function(card) {
     var cardElement = mapCardTemplate.cloneNode(true);
@@ -135,9 +143,10 @@ var fillCard = function(card) {
 
     var featuresList = cardElement.querySelector('.popup__features');
     featuresList.innerHTML = '';
-    renderFearures(card.offer.features, featuresList);
+    renderFeatures(card.offer.features, featuresList);
 
-    mapWindow.insertBefore(cardElement, mapFiltersElement);
+    return cardElement;
 };
-fillCard(offers[0]);
+mapWindow.insertBefore(fillCard(offers[0]), mapFiltersElement);
+
 
