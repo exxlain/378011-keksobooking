@@ -79,10 +79,7 @@ var createOffersArray = function (lengthArray) {
 var offers = createOffersArray(8);
 
 var mapWindow = document.querySelector('.map');
-mapWindow.classList.remove('map--faded');
-
 var pinsListElement = mapWindow.querySelector('.map__pins');
-
 var templateElement = document.querySelector('template').content;
 var mapPinTemplate = templateElement.querySelector('.map__pin');
 var mapCardTemplate = templateElement.querySelector('.map__card');
@@ -157,4 +154,116 @@ var fillCard = function (card) {
 };
 
 var mapFiltersElement = mapWindow.querySelector('.map__filters-container');
-mapWindow.insertBefore(fillCard(offers[0]), mapFiltersElement);
+
+/*создает все карточки объявлений*/
+var allCardGenerate = function () {
+    for (var i = 0; i < offers.length; i++) {
+        mapWindow.insertBefore(fillCard(offers[i]), mapFiltersElement);
+    }
+};
+allCardGenerate();
+
+var ENTER_KEYCODE = 13;
+var ESC_KEYCODE = 27;
+var noticeForm = document.querySelector('.notice__form');
+var mainPin = mapWindow.querySelector('.map__pin--main');
+var mapPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+var Popups = document.querySelectorAll('.map__card');
+var activeElement = null;
+var closeElements = document.querySelectorAll('.popup__close');
+
+/*управляет отображением элементов(пины или карточки)*/
+var displayItems = function (arr, condition) {
+    for (var i = 0; i < arr.length; i++) {
+        arr[i].style.visibility = condition;
+    }
+};
+displayItems(mapPins, 'hidden');
+displayItems(Popups, 'hidden');
+
+/*активирует форму и карту, показывает пины*/
+var onMainPinMouseup = function () {
+    mapWindow.classList.remove('map--faded');
+    noticeForm.classList.remove('notice__form--disabled');
+    noticeForm.querySelector('fieldset').removeAttribute('disabled');
+    displayItems(mapPins, 'visible');
+};
+/*навешивает обработчик мыши на основной пин*/
+mainPin.addEventListener('mouseup', function() {
+    onMainPinMouseup();
+});
+
+/*навешивает обработчик enter на основной пин*/
+mainPin.addEventListener('keydown', function(evt) {
+    if (evt.keyCode === ENTER_KEYCODE) {
+        onMainPinMouseup();
+    }
+});
+
+/* отображение попапа*/
+var openPopup = function () {
+    for (var i = 0; i < mapPins.length; i++) {
+        if (mapPins[i].classList.contains('map__pin--active')) {
+            Popups[i].style.visibility = 'visible';
+        }
+    };
+    document.addEventListener('keydown', onPopupEscPress);
+};
+
+/*активирует пин и вызывает попап*/
+var onPinMouseup = function (evt) {
+    if (activeElement) {
+        activeElement.classList.remove('map__pin--active');
+    }
+    activeElement = evt.currentTarget;
+    activeElement.classList.add('map__pin--active');
+    openPopup();
+};
+
+/*закрывает попап*/
+var popupClose = function () {
+    for (var i = 0; i < Popups.length; i++) {
+        if (Popups[i].style.visibility = 'visible') {
+            mapPins[i].classList.remove('map__pin--active');
+            Popups[i].style.visibility = 'hidden';
+        }
+    }
+    document.removeEventListener('keydown', onPopupEscPress);
+};
+
+/*обработчик enter на пине*/
+var onPinEnterPress = function (evt) {
+    if (evt.keyCode === ENTER_KEYCODE) {
+        onPinMouseup(evt);
+    }
+};
+/*обработчик enter на крестике*/
+var oncloseElementEnterPress = function (evt) {
+    if (evt.keyCode === ENTER_KEYCODE) {
+        popupClose();
+    }
+};
+/*обработчик события закрытия попапа по esc*/
+var onPopupEscPress = function (evt) {
+    if (evt.keyCode === ESC_KEYCODE) {
+        popupClose();
+    }
+};
+
+/*навешивает обработчики на элементы*/
+var allElementsAction = function (arr, action, func) {
+    for (var i = 0; i < arr.length; i++) {
+        arr[i].addEventListener(action, func);
+    }
+};
+/*навешивает обработчик мыши на все пины*/
+allElementsAction(mapPins, 'mouseup', onPinMouseup);
+
+/*навешивает обработчик enter на все пины*/
+allElementsAction(mapPins, 'keydown', onPinEnterPress);
+
+/*навешивает обработчик click на все крестики*/
+allElementsAction(closeElements, 'click', popupClose);
+
+/*навешивает обработчик enter на все крестики*/
+allElementsAction(closeElements, 'keydown', oncloseElementEnterPress);
