@@ -171,6 +171,7 @@ var mapPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
 var Popups = document.querySelectorAll('.map__card');
 var activeElement = null;
 var closeElements = document.querySelectorAll('.popup__close');
+var allFieldsets = noticeForm.querySelectorAll('fieldset');
 
 /*управляет отображением элементов(пины или карточки)*/
 var displayItems = function (arr, condition) {
@@ -185,8 +186,10 @@ displayItems(Popups, 'hidden');
 var onMainPinMouseup = function () {
     mapWindow.classList.remove('map--faded');
     noticeForm.classList.remove('notice__form--disabled');
-    noticeForm.querySelector('fieldset').removeAttribute('disabled');
     displayItems(mapPins, 'visible');
+    for (var i = 0; i < allFieldsets.length; i++) {
+        allFieldsets[i].removeAttribute('disabled');
+    }
 };
 /*навешивает обработчик мыши на основной пин*/
 mainPin.addEventListener('mouseup', function() {
@@ -267,3 +270,5 @@ allElementsAction(closeElements, 'click', popupClose);
 
 /*навешивает обработчик enter на все крестики*/
 allElementsAction(closeElements, 'keydown', oncloseElementEnterPress);
+
+
