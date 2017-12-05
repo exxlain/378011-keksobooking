@@ -210,11 +210,9 @@ var openPopup = function () {
             popups[i].style.visibility = 'visible';
             closeElements[i].addEventListener('click', popupClose);
             closeElements[i].addEventListener('keydown', onCloseElementEnterPress);
-
         }
-    };
+    }
     document.addEventListener('keydown', onPopupEscPress);
-
 };
 
 /*активирует пин и вызывает попап*/
@@ -233,6 +231,8 @@ var popupClose = function () {
         if (popups[i].style.visibility = 'visible') {
             mapPins[i].classList.remove('map__pin--active');
             popups[i].style.visibility = 'hidden';
+            closeElements[i].removeEventListener('click', popupClose);
+            closeElements[i].removeEventListener('keydown', onCloseElementEnterPress);
         }
     }
     document.removeEventListener('keydown', onPopupEscPress);
