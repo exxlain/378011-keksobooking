@@ -194,8 +194,8 @@ var openPopup = function (obj) {
     cardElement.querySelector('.popup__close').addEventListener('click', function () {
      popupClose(cardElement)
     });
-    cardElement.querySelector('.popup__close').addEventListener('keydown', function () {
-      onCloseElementEnterPress(cardElement)
+    cardElement.querySelector('.popup__close').addEventListener('keydown', function (evt) {
+      onCloseElementEnterPress(evt, cardElement)
     });
     document.addEventListener('keydown', function (evt) {
       onPopupEscPress(evt, cardElement)
@@ -212,18 +212,18 @@ var onPinMouseup = function (evt, obj) {
 };
 
 /*закрывает попап*/
-var popupClose = function (obj) {
-      if (obj) {
+var popupClose = function (currentOffer) {
+      if (currentOffer) {
         mapWindow.querySelector('.map__pin--active').classList.remove('map__pin--active');
-        obj.querySelector('.popup__close').removeEventListener('click', function () {
-        popupClose(obj)
+        currentOffer.querySelector('.popup__close').removeEventListener('click', function () {
+        popupClose(currentOffer)
         });
-        obj.querySelector('.popup__close').removeEventListener('keydown', function () {
-        onCloseElementEnterPress(obj)
+        currentOffer.querySelector('.popup__close').removeEventListener('keydown', function (evt) {
+        onCloseElementEnterPress(evt, currentOffer)
         });
-        mapWindow.removeChild(obj);
+        mapWindow.removeChild(currentOffer);
         document.removeEventListener('keydown', function (evt) {
-          onPopupEscPress(evt, obj)
+          onPopupEscPress(evt, currentOffer)
        });
     }
 };
