@@ -77,8 +77,8 @@ var fillPin = function (pin) {
     var pinElement = mapPinTemplate.cloneNode(true);
 
     pinElement.querySelector('img').src = pin.author.avatar;
-    pinElement.style.left = pin.location.x - 5 + 'px';
-    pinElement.style.top = pin.location.y - 39 + 'px';
+    pinElement.style.left = pin.location.x - 20 + 'px';
+    pinElement.style.top = pin.location.y - 58 + 'px';
 
     return pinElement;
 };
@@ -174,17 +174,15 @@ var onMainPinMouseup = function () {
         allFieldsets[i].removeAttribute('disabled');
     }
     pinShow();
-    var mapPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    var mapPins = mapWindow.querySelectorAll('.map__pin:not(.map__pin--main)');
     /*добавляют события пинам*/
-    mapPins.forEach (function(el, i) {
+    mapPins.forEach(function(el, i) {
         el.addEventListener('mouseup', function(evt) {
             onPinMouseup(evt, offers[i]) // событие и нужный объект
         })
-    });
-    mapPins.forEach (function(el, i) {
         el.addEventListener('keydown', function(evt) {
             if (evt.keyCode === ENTER_KEYCODE) {
-                onPinMouseup(evt, offers[i]) // событие и нужный объект
+               onPinMouseup(evt, offers[i]) // событие и нужный объект
             }
         })
     });
@@ -193,10 +191,15 @@ var onMainPinMouseup = function () {
 var openPopup = function (obj) {
     var cardElement = fillCard(obj);
     mapWindow.insertBefore(cardElement, mapFiltersElement);
-    var popup = mapWindow.querySelector('.popup');
-    popup.querySelector('.popup__close').addEventListener('click', popupClose);
-    popup.querySelector('.popup__close').addEventListener('keydown', onCloseElementEnterPress);
-    document.addEventListener('keydown', onPopupEscPress);
+    cardElement.querySelector('.popup__close').addEventListener('click', function () {
+     popupClose(cardElement)
+    });
+    cardElement.querySelector('.popup__close').addEventListener('keydown', function () {
+      onCloseElementEnterPress(cardElement)
+    });
+    document.addEventListener('keydown', function (evt) {
+      onPopupEscPress(evt, cardElement)
+    });
 };
 /*активирует пин и вызывает попап*/
 var onPinMouseup = function (evt, obj) {
@@ -209,25 +212,30 @@ var onPinMouseup = function (evt, obj) {
 };
 
 /*закрывает попап*/
-var popupClose = function () {
-       var popup = mapWindow.querySelector('.popup');
-    if (popup) {
-        document.querySelector('.map__pin--active').classList.remove('map__pin--active');
-        popup.querySelector('.popup__close').removeEventListener('click', popupClose);
-        popup.querySelector('.popup__close').removeEventListener('keydown', onCloseElementEnterPress);
-        mapWindow.removeChild(popup);
-        document.removeEventListener('keydown', onPopupEscPress);
+var popupClose = function (obj) {
+      if (obj) {
+        mapWindow.querySelector('.map__pin--active').classList.remove('map__pin--active');
+        obj.querySelector('.popup__close').removeEventListener('click', function () {
+        popupClose(obj)
+        });
+        obj.querySelector('.popup__close').removeEventListener('keydown', function () {
+        onCloseElementEnterPress(obj)
+        });
+        mapWindow.removeChild(obj);
+        document.removeEventListener('keydown', function (evt) {
+          onPopupEscPress(evt, obj)
+       });
     }
 };
 /*обработчик enter на крестике*/
-var onCloseElementEnterPress = function (evt) {
+var onCloseElementEnterPress = function (evt, obj) {
     if (evt.keyCode === ENTER_KEYCODE) {
-        popupClose();
+        popupClose(obj);
     }
 };
 /*обработчик события закрытия попапа по esc*/
-var onPopupEscPress = function (evt) {
+var onPopupEscPress = function (evt, obj) {
     if (evt.keyCode === ESC_KEYCODE) {
-        popupClose();
+        popupClose(obj);
     }
 };
