@@ -228,14 +228,137 @@ var popupClose = function (currentOffer) {
     }
 };
 /*обработчик enter на крестике*/
-var onCloseElementEnterPress = function (evt, obj) {
+var onCloseElementEnterPress = function (evt, currentOffer) {
     if (evt.keyCode === ENTER_KEYCODE) {
-        popupClose(obj);
+        popupClose(currentOffer);
     }
 };
 /*обработчик события закрытия попапа по esc*/
-var onPopupEscPress = function (evt, obj) {
+var onPopupEscPress = function (evt, currentOffer) {
     if (evt.keyCode === ESC_KEYCODE) {
-        popupClose(obj);
+        popupClose(currentOffer);
     }
 };
+
+/*работа с формой*/
+var inputTitle = noticeForm.querySelector('#title');
+var inputAdress = noticeForm.querySelector('#address');
+var houseType = noticeForm.querySelector('#type');
+var inputPrice = noticeForm.querySelector('#price');
+var timeIn = noticeForm.querySelector('#timein');
+var timeOut = noticeForm.querySelector('#timeout');
+var roomNumber = noticeForm.querySelector('#room_number');
+var capacity = noticeForm.querySelector('#capacity');
+
+/*время въезда и выезда*/
+var optionsTime = timeIn.querySelectorAll('option');
+
+/*функция синхронизации полей*/
+var changeOption = function (arr, firstSelect, secondSelect) {
+    for (var i = 0; i < arr.length; i++) {
+        if (firstSelect.options.selectedIndex === i) {
+            secondSelect.options.selectedIndex = i;
+        }
+    }
+};
+
+timeIn.addEventListener("change", function() {
+    changeOption(optionsTime, timeIn, timeOut);
+});
+
+/*количество комнат связанное с количеством гостей */
+var changeCapacity = function () {
+    switch (roomNumber.options[roomNumber.selectedIndex].text) {
+        case '1 комната':
+            capacity.options.selectedIndex = '2';
+            break;
+        case '2 комнаты':
+            capacity.options.selectedIndex = '1';
+            break;
+        case '3 комнаты':
+            capacity.options.selectedIndex = '0';
+            break;
+        case '100 комнат':
+            capacity.options.selectedIndex = '3';
+            break;
+    }
+};
+roomNumber.addEventListener('change', function() {
+    changeCapacity();
+});
+
+/*поле тип жилья и минимальная цена*/
+var changePrice = function () {
+    switch (houseType.options[houseType.selectedIndex].text) {
+        case 'Лачуга':
+            inputPrice.min = '0';
+            break;
+        case 'Квартира':
+            inputPrice.min = '1000';
+            break;
+        case 'Дом':
+            inputPrice.min = '5000';
+            break;
+        case 'Дворец':
+            inputPrice.min = '10000';
+            break;
+    }
+};
+houseType.addEventListener('change', function() {
+    changePrice();
+});
+
+
+/*устанавливает цвет рамки*/
+var setInputColor = function(element) {
+    element.style.outline = '2px solid red';
+};
+/*убирает цвет рамки*/
+var resetInputColor = function(element) {
+    element.style.outline = '';
+}
+
+/*проверка поля адрес*/
+inputAdress.addEventListener('invalid', function(evt) {
+    if (inputAdress.validity.valueMissing) {
+        inputAdress.setCustomValidity('Обязательное поле');
+        setInputColor(inputAdress);
+    } else {
+        inputAdress.setCustomValidity('');
+        resetInputColor(inputAdress);
+    }
+});
+
+/*проверка поля заголовок*/
+inputTitle.addEventListener('invalid', function(evt) {
+    if (inputTitle.validity.tooShort) {
+        inputTitle.setCustomValidity('Заголовок объявления быть не менее 30-ти символов');
+        setInputColor(inputTitle);
+    } else if (inputTitle.validity.tooLong) {
+        inputTitle.setCustomValidity('Заголовок объявления не должнен превышать 100 символов');
+        setInputColor(inputTitle);
+    } else if (inputTitle.validity.valueMissing) {
+        inputTitle.setCustomValidity('Обязательное поле');
+        setInputColor(inputTitle);
+    } else {
+        inputTitle.setCustomValidity('');
+        resetInputColor(inputTitle);
+    }
+});
+
+/*проверка поля цена за ночь*/
+inputPrice.addEventListener('invalid', function(evt) {
+    if (inputPrice.validity.rangeUnderflow) {
+        inputPrice.setCustomValidity('Стоимость ниже рекомендованной');
+        setInputColor(inputPrice);
+    } else if (inputPrice.validity.rangeOverflow) {
+        inputPrice.setCustomValidity('Стоимость выше рекомендованной');
+        setInputColor(inputPrice);
+    } else if (inputPrice.validity.valueMissing) {
+        inputPrice.setCustomValidity('Обязательное поле');
+        setInputColor(inputPrice);
+    } else {
+        inputPrice.setCustomValidity('');
+        setInputColor(inputPrice);
+    }
+});
