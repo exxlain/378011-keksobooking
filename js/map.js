@@ -189,14 +189,12 @@ var onMainPinMouseup = function () {
 };
 /* отображение попапа*/
 var openPopup = function (obj) {
-  var currentPopup = document.querySelector('.popup');
-  if(currentPopup){
-      popupClose(currentPopup);
- }
+
     var cardElement = fillCard(obj);
     mapWindow.insertBefore(cardElement, mapFiltersElement);
+
     cardElement.querySelector('.popup__close').addEventListener('click', function () {
-     popupClose(cardElement)
+    popupClose(cardElement)
     });
     cardElement.querySelector('.popup__close').addEventListener('keydown', function (evt) {
       onCloseElementEnterPress(evt, cardElement)
@@ -207,15 +205,17 @@ var openPopup = function (obj) {
 
 };
 /*активирует пин и вызывает попап*/
-var onPinMouseup = function (evt, obj) {
-    if (activeMapPin ) {
+var onPinMouseup = function(evt, obj) {
+    var currentPopup = document.querySelector('.popup');
+    if (currentPopup) {
+        popupClose(currentPopup);
         activeMapPin.classList.remove('map__pin--active');
-
     }
     activeMapPin = evt.currentTarget;
     activeMapPin.classList.add('map__pin--active');
     openPopup(obj);
 };
+
 
 /*закрывает попап*/
 var popupClose = function (currentOffer) {
