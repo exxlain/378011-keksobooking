@@ -189,6 +189,10 @@ var onMainPinMouseup = function () {
 };
 /* отображение попапа*/
 var openPopup = function (obj) {
+  var currentPopup = document.querySelector('.popup');
+  if(currentPopup){
+      popupClose(currentPopup);
+ }
     var cardElement = fillCard(obj);
     mapWindow.insertBefore(cardElement, mapFiltersElement);
     cardElement.querySelector('.popup__close').addEventListener('click', function () {
@@ -200,11 +204,13 @@ var openPopup = function (obj) {
     document.addEventListener('keydown', function (evt) {
       onPopupEscPress(evt, cardElement)
     });
+
 };
 /*активирует пин и вызывает попап*/
 var onPinMouseup = function (evt, obj) {
-    if (activeMapPin) {
+    if (activeMapPin ) {
         activeMapPin.classList.remove('map__pin--active');
+
     }
     activeMapPin = evt.currentTarget;
     activeMapPin.classList.add('map__pin--active');
@@ -252,7 +258,8 @@ var capacity = noticeForm.querySelector('#capacity');
 
 /*время въезда и выезда*/
 var optionsTime = timeIn.querySelectorAll('option');
-
+var optionsTimeOut = timeOut.querySelectorAll('option');
+var optionsCapacity = capacity.querySelectorAll('option');
 /*функция синхронизации полей*/
 var changeOption = function (arr, firstSelect, secondSelect) {
     for (var i = 0; i < arr.length; i++) {
@@ -262,44 +269,49 @@ var changeOption = function (arr, firstSelect, secondSelect) {
     }
 };
 
-timeIn.addEventListener("change", function() {
+timeIn.addEventListener('change', function() {
     changeOption(optionsTime, timeIn, timeOut);
+});
+timeOut.addEventListener('change', function() {
+    changeOption(optionsTimeOut, timeOut, timeIn);
 });
 
 /*количество комнат связанное с количеством гостей */
+
 var changeCapacity = function () {
-    switch (roomNumber.options[roomNumber.selectedIndex].text) {
-        case '1 комната':
-            capacity.options.selectedIndex = '2';
-            break;
-        case '2 комнаты':
-            capacity.options.selectedIndex = '1';
-            break;
-        case '3 комнаты':
-            capacity.options.selectedIndex = '0';
-            break;
-        case '100 комнат':
+     switch (roomNumber.options[roomNumber.selectedIndex].value) {
+         case '1':
+             capacity.options.selectedIndex = '2';
+             break;
+        case '2':
+             capacity.options.selectedIndex = '1';
+             break;
+         case '3':
+             capacity.options.selectedIndex = '0';
+             break;
+         case '100':
             capacity.options.selectedIndex = '3';
-            break;
+             break;
     }
-};
+ };
+
 roomNumber.addEventListener('change', function() {
     changeCapacity();
 });
 
 /*поле тип жилья и минимальная цена*/
 var changePrice = function () {
-    switch (houseType.options[houseType.selectedIndex].text) {
-        case 'Лачуга':
+    switch (houseType.options[houseType.selectedIndex].value) {
+        case 'bungalo':
             inputPrice.min = '0';
             break;
-        case 'Квартира':
+        case 'flat':
             inputPrice.min = '1000';
             break;
-        case 'Дом':
+        case 'house':
             inputPrice.min = '5000';
             break;
-        case 'Дворец':
+        case 'palace':
             inputPrice.min = '10000';
             break;
     }
@@ -310,55 +322,54 @@ houseType.addEventListener('change', function() {
 
 
 /*устанавливает цвет рамки*/
-var setInputColor = function(element) {
+var setErrorColor = function(element) {
     element.style.outline = '2px solid red';
 };
 /*убирает цвет рамки*/
-var resetInputColor = function(element) {
+var resetErrorColor = function(element) {
     element.style.outline = '';
 }
 
-/*проверка поля адрес*/
-inputAdress.addEventListener('invalid', function(evt) {
-    if (inputAdress.validity.valueMissing) {
-        inputAdress.setCustomValidity('Обязательное поле');
-        setInputColor(inputAdress);
-    } else {
-        inputAdress.setCustomValidity('');
-        resetInputColor(inputAdress);
+/*функция проверки валидности поля*/
+var checkValidity = function (inputName, validityType, message) {
+ if (inputName.validity[validityType]) {
+        inputName.setCustomValidity(message);
+        setErrorColor(inputName);
     }
-});
+};
 
 /*проверка поля заголовок*/
 inputTitle.addEventListener('invalid', function(evt) {
-    if (inputTitle.validity.tooShort) {
-        inputTitle.setCustomValidity('Заголовок объявления быть не менее 30-ти символов');
-        setInputColor(inputTitle);
-    } else if (inputTitle.validity.tooLong) {
-        inputTitle.setCustomValidity('Заголовок объявления не должнен превышать 100 символов');
-        setInputColor(inputTitle);
-    } else if (inputTitle.validity.valueMissing) {
-        inputTitle.setCustomValidity('Обязательное поле');
-        setInputColor(inputTitle);
-    } else {
-        inputTitle.setCustomValidity('');
-        resetInputColor(inputTitle);
-    }
+  checkValidity(inputTitle, 'tooShort', 'Заголовок объявления быть не менее 30-ти символов');
 });
+
+inputTitle.addEventListener('invalid', function(evt) {
+  checkValidity(inputTitle, 'valueMissing', 'Обязательное поле');
+  });
+
+inputTitle.addEventListener('invalid', function(evt) {
+  checkValidity(inputTitle, 'tooLong', 'Заголовок объявления не должнен превышать 100 символов');
+    });
+
+
+/*проверка поля адрес*/
+inputAdress.addEventListener('invalid', function(evt) {
+  checkValidity(inputAdress, 'valueMissing', 'Обязательное поле');
+  });
+
 
 /*проверка поля цена за ночь*/
 inputPrice.addEventListener('invalid', function(evt) {
-    if (inputPrice.validity.rangeUnderflow) {
-        inputPrice.setCustomValidity('Стоимость ниже рекомендованной');
-        setInputColor(inputPrice);
-    } else if (inputPrice.validity.rangeOverflow) {
-        inputPrice.setCustomValidity('Стоимость выше рекомендованной');
-        setInputColor(inputPrice);
-    } else if (inputPrice.validity.valueMissing) {
-        inputPrice.setCustomValidity('Обязательное поле');
-        setInputColor(inputPrice);
-    } else {
-        inputPrice.setCustomValidity('');
-        setInputColor(inputPrice);
-    }
+  checkValidity(inputPrice, 'rangeUnderflow', 'Стоимость ниже рекомендованной');
 });
+
+inputPrice.addEventListener('invalid', function(evt) {
+  checkValidity(inputPrice, 'rangeOverflow', 'Стоимость выше рекомендованной');
+});
+
+inputPrice.addEventListener('invalid', function(evt) {
+  checkValidity(inputPrice, 'valueMissing', 'Обязательное поле');
+});
+
+
+
