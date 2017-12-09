@@ -208,12 +208,10 @@ var openPopup = function (obj) {
 /*активирует пин и вызывает попап*/
 var onPinMouseup = function(evt, obj) {
    var currentPopup = document.querySelector('.popup');
-if (currentPopup) {
+   if (currentPopup) {
      popupClose(currentPopup);
-}
-   if (activeMapPin) {
-        activeMapPin.classList.remove('map__pin--active');
-    }
+     activeMapPin.classList.remove('map__pin--active');
+   }
     activeMapPin = evt.currentTarget;
     activeMapPin.classList.add('map__pin--active');
     openPopup(obj);
