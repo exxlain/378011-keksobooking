@@ -188,7 +188,7 @@ var onMainPinMouseup = function () {
     });
 };
 /* отображение попапа*/
-var openPopup = function (obj) {
+var popupOpen = function (obj) {
 
     var cardElement = fillCard(obj);
 
@@ -214,7 +214,7 @@ var onPinMouseup = function(evt, obj) {
    }
     activeMapPin = evt.currentTarget;
     activeMapPin.classList.add('map__pin--active');
-    openPopup(obj);
+    popupOpen(obj);
 };
 
 
@@ -227,6 +227,7 @@ var popupClose = function (currentOffer) {
         currentOffer.querySelector('.popup__close').removeEventListener('keydown', function (evt) {
         onCloseElementEnterPress(evt, currentOffer)
         });
+      /*  document.removeEventListener('keydown', onPopupEscPress);*/
         document.removeEventListener('keydown', function (evt) {
           onPopupEscPress(evt, currentOffer)
          });
@@ -247,7 +248,7 @@ var onPopupEscPress = function (evt, currentOffer) {
 
 /*работа с формой*/
 var inputTitle = noticeForm.querySelector('#title');
-var inputAdress = noticeForm.querySelector('#address');
+var inputAddress = noticeForm.querySelector('#address');
 var houseType = noticeForm.querySelector('#type');
 var inputPrice = noticeForm.querySelector('#price');
 var timeIn = noticeForm.querySelector('#timein');
@@ -319,19 +320,19 @@ houseType.addEventListener('change', function() {
     changePrice();
 });
 
-
 /*устанавливает цвет рамки*/
 var setErrorColor = function(element) {
     element.style.outline = '2px solid red';
 };
-/*убирает цвет рамки*/
-var resetErrorColor = function(element) {
+/*убирает ошибку*/
+var resetError = function(element) {
+    element.setCustomValidity('');
     element.style.outline = '';
-}
+};
 
 /*функция проверки валидности поля*/
-var checkValidity = function (inputName, validityType, message) {
- if (inputName.validity[validityType]) {
+var validityCheck = function(inputName, validityType, message) {
+    if (inputName.validity[validityType]) {
         inputName.setCustomValidity(message);
         setErrorColor(inputName);
     }
@@ -339,36 +340,23 @@ var checkValidity = function (inputName, validityType, message) {
 
 /*проверка поля заголовок*/
 inputTitle.addEventListener('invalid', function(evt) {
-  checkValidity(inputTitle, 'tooShort', 'Заголовок объявления быть не менее 30-ти символов');
+    resetError(inputTitle);
+    validityCheck(inputTitle, 'tooShort', 'Заголовок объявления быть не менее 30-ти символов');
+    validityCheck(inputTitle, 'tooLong', 'Заголовок объявления не должнен превышать 100 символов');
+    validityCheck(inputTitle, 'valueMissing', 'Обязательное поле');
 });
 
-inputTitle.addEventListener('invalid', function(evt) {
-  checkValidity(inputTitle, 'valueMissing', 'Обязательное поле');
-  });
-
-inputTitle.addEventListener('invalid', function(evt) {
-  checkValidity(inputTitle, 'tooLong', 'Заголовок объявления не должнен превышать 100 символов');
-    });
-
-
 /*проверка поля адрес*/
-inputAdress.addEventListener('invalid', function(evt) {
-  checkValidity(inputAdress, 'valueMissing', 'Обязательное поле');
-  });
+inputAddress.addEventListener('invalid', function(evt) {
+    resetError(inputAddress);
+    validityCheck(inputAddress, 'valueMissing', 'Обязательное поле');
+});
 
 
 /*проверка поля цена за ночь*/
 inputPrice.addEventListener('invalid', function(evt) {
-  checkValidity(inputPrice, 'rangeUnderflow', 'Стоимость ниже рекомендованной');
+    resetError(inputPrice);
+    validityCheck(inputPrice, 'rangeUnderflow', 'Стоимость ниже рекомендованной');
+    validityCheck(inputPrice, 'rangeOverflow', 'Стоимость выше рекомендованной');
+    validityCheck(inputPrice, 'valueMissing', 'Обязательное поле');
 });
-
-inputPrice.addEventListener('invalid', function(evt) {
-  checkValidity(inputPrice, 'rangeOverflow', 'Стоимость выше рекомендованной');
-});
-
-inputPrice.addEventListener('invalid', function(evt) {
-  checkValidity(inputPrice, 'valueMissing', 'Обязательное поле');
-});
-
-
-
