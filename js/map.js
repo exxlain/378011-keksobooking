@@ -188,32 +188,38 @@ var onMainPinMouseup = function () {
     });
 };
 /* отображение попапа*/
-var openPopup = function (obj) {
+var popupOpen = function (obj) {
+
     var cardElement = fillCard(obj);
+
     mapWindow.insertBefore(cardElement, mapFiltersElement);
+
     cardElement.querySelector('.popup__close').addEventListener('click', function () {
-     popupClose(cardElement)
+    popupClose(cardElement)
     });
     cardElement.querySelector('.popup__close').addEventListener('keydown', function (evt) {
       onCloseElementEnterPress(evt, cardElement)
     });
     document.addEventListener('keydown', function (evt) {
-      onPopupEscPress(evt, cardElement)
+      onPopupEscPress(evt, document.querySelector('.popup'))
     });
+
 };
 /*активирует пин и вызывает попап*/
-var onPinMouseup = function (evt, obj) {
-    if (activeMapPin) {
-        activeMapPin.classList.remove('map__pin--active');
-    }
+var onPinMouseup = function(evt, obj) {
+   var currentPopup = document.querySelector('.popup');
+   if (currentPopup) {
+     popupClose(currentPopup);
+     activeMapPin.classList.remove('map__pin--active');
+   }
     activeMapPin = evt.currentTarget;
     activeMapPin.classList.add('map__pin--active');
-    openPopup(obj);
+    popupOpen(obj);
 };
+
 
 /*закрывает попап*/
 var popupClose = function (currentOffer) {
-      if (currentOffer) {
         mapWindow.querySelector('.map__pin--active').classList.remove('map__pin--active');
         currentOffer.querySelector('.popup__close').removeEventListener('click', function () {
         popupClose(currentOffer)
@@ -221,21 +227,136 @@ var popupClose = function (currentOffer) {
         currentOffer.querySelector('.popup__close').removeEventListener('keydown', function (evt) {
         onCloseElementEnterPress(evt, currentOffer)
         });
-        mapWindow.removeChild(currentOffer);
+      /*  document.removeEventListener('keydown', onPopupEscPress);*/
         document.removeEventListener('keydown', function (evt) {
           onPopupEscPress(evt, currentOffer)
-       });
-    }
-};
+         });
+        mapWindow.removeChild(currentOffer);
+  };
 /*обработчик enter на крестике*/
-var onCloseElementEnterPress = function (evt, obj) {
+var onCloseElementEnterPress = function (evt, currentOffer) {
     if (evt.keyCode === ENTER_KEYCODE) {
-        popupClose(obj);
+        popupClose(currentOffer);
     }
 };
 /*обработчик события закрытия попапа по esc*/
-var onPopupEscPress = function (evt, obj) {
+var onPopupEscPress = function (evt, currentOffer) {
     if (evt.keyCode === ESC_KEYCODE) {
-        popupClose(obj);
+        popupClose(currentOffer);
     }
 };
+
+/*работа с формой*/
+var inputTitle = noticeForm.querySelector('#title');
+var inputAddress = noticeForm.querySelector('#address');
+var houseType = noticeForm.querySelector('#type');
+var inputPrice = noticeForm.querySelector('#price');
+var timeIn = noticeForm.querySelector('#timein');
+var timeOut = noticeForm.querySelector('#timeout');
+var roomNumber = noticeForm.querySelector('#room_number');
+var capacity = noticeForm.querySelector('#capacity');
+
+/*время въезда и выезда*/
+var optionsTime = timeIn.querySelectorAll('option');
+var optionsTimeOut = timeOut.querySelectorAll('option');
+var optionsCapacity = capacity.querySelectorAll('option');
+/*функция синхронизации полей*/
+var changeOption = function (arr, firstSelect, secondSelect) {
+    for (var i = 0; i < arr.length; i++) {
+        if (firstSelect.options.selectedIndex === i) {
+            secondSelect.options.selectedIndex = i;
+        }
+    }
+};
+
+timeIn.addEventListener('change', function() {
+    changeOption(optionsTime, timeIn, timeOut);
+});
+timeOut.addEventListener('change', function() {
+    changeOption(optionsTimeOut, timeOut, timeIn);
+});
+
+/*количество комнат связанное с количеством гостей */
+
+var changeCapacity = function () {
+     switch (roomNumber.options[roomNumber.selectedIndex].value) {
+         case '1':
+             capacity.options.selectedIndex = '2';
+             break;
+        case '2':
+             capacity.options.selectedIndex = '1';
+             break;
+         case '3':
+             capacity.options.selectedIndex = '0';
+             break;
+         case '100':
+            capacity.options.selectedIndex = '3';
+             break;
+    }
+ };
+
+roomNumber.addEventListener('change', function() {
+    changeCapacity();
+});
+
+/*поле тип жилья и минимальная цена*/
+var changePrice = function () {
+    switch (houseType.options[houseType.selectedIndex].value) {
+        case 'bungalo':
+            inputPrice.min = '0';
+            break;
+        case 'flat':
+            inputPrice.min = '1000';
+            break;
+        case 'house':
+            inputPrice.min = '5000';
+            break;
+        case 'palace':
+            inputPrice.min = '10000';
+            break;
+    }
+};
+houseType.addEventListener('change', function() {
+    changePrice();
+});
+
+/*устанавливает цвет рамки*/
+var setErrorColor = function(element) {
+    element.style.outline = '2px solid red';
+};
+/*убирает ошибку*/
+var resetError = function(element) {
+    element.setCustomValidity('');
+    element.style.outline = '';
+};
+
+/*функция проверки валидности поля*/
+var validityCheck = function(inputName, validityType, message) {
+    if (inputName.validity[validityType]) {
+        inputName.setCustomValidity(message);
+        setErrorColor(inputName);
+    }
+};
+
+/*проверка поля заголовок*/
+inputTitle.addEventListener('invalid', function(evt) {
+    resetError(inputTitle);
+    validityCheck(inputTitle, 'tooShort', 'Заголовок объявления быть не менее 30-ти символов');
+    validityCheck(inputTitle, 'tooLong', 'Заголовок объявления не должнен превышать 100 символов');
+    validityCheck(inputTitle, 'valueMissing', 'Обязательное поле');
+});
+
+/*проверка поля адрес*/
+inputAddress.addEventListener('invalid', function(evt) {
+    resetError(inputAddress);
+    validityCheck(inputAddress, 'valueMissing', 'Обязательное поле');
+});
+
+
+/*проверка поля цена за ночь*/
+inputPrice.addEventListener('invalid', function(evt) {
+    resetError(inputPrice);
+    validityCheck(inputPrice, 'rangeUnderflow', 'Стоимость ниже рекомендованной');
+    validityCheck(inputPrice, 'rangeOverflow', 'Стоимость выше рекомендованной');
+    validityCheck(inputPrice, 'valueMissing', 'Обязательное поле');
+});
