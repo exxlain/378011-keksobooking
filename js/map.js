@@ -138,7 +138,7 @@ var onMainPinMousedown = function (evt) {
 
 
         mainPin.style.left = currentCoords.x + 'px';
-        if ((mainPin.offsetTop - shift.y) >= MIN_Y && (mainPin.offsetTop - shift.y) <= MAX_Y) {
+        if (currentCoords.y >= MIN_Y && currentCoords.y <= MAX_Y) {
             mainPin.style.top = currentCoords.y + 'px';
         }
 
