@@ -106,8 +106,9 @@
 var MIN_Y = 100;
 var MAX_Y = 500;
 /*размеры главного пина*/
-var MAIN_PIN_HEIGHT = mainPin.clientHeight;
-var MAIN_PIN_WIDTH = mainPin.clientWidth;
+
+var MAIN_PIN_HEIGHT = 65;
+var MAIN_PIN_WIDTH = 65;
 var MAIN_TAIL_HEIGHT = 22;
 
 /*  функция перемещения главного пина*/
