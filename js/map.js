@@ -103,32 +103,22 @@
 
 /* перемещение главного пина*/
 /*ограничения перемещения главного пина по высоте*/
-var minY = 100;
-var maxY = 500;
-/*размер хвостика главного пина*/
+var MIN_Y = 100;
+var MAX_Y = 500;
+/*размеры главного пина*/
+var MAIN_PIN_HEIGHT = 65;
+var MAIN_PIN_WIDTH = 65;
 var MAIN_TAIL_HEIGHT = 22;
 
-/* Функция для определения координат острого кончика главного пина*/
-var getCoordinates = function (element, container) {
-    var elementBox = element.getBoundingClientRect();
-    var overlayBox = container.getBoundingClientRect();
-    return Math.round((elementBox.left - overlayBox.left + elementBox.width / 2)) + ', ' + Math.round((elementBox.bottom + pageYOffset + MAIN_TAIL_HEIGHT));
-};
-
-/*внесение координат в поле адрес*/
-var getAddress = function () {
-    inputAddress.value = getCoordinates(mainPin, pinsOverlay);
-};
-
 /*  функция перемещения главного пина*/
-var onMainPinMousedown = function(evt) {
+var onMainPinMousedown = function (evt) {
     evt.preventDefault();
 
     var startCoords = {
         x: evt.clientX,
         y: evt.clientY
     };
-    var onMouseMove = function(moveEvt) {
+    var onMouseMove = function (moveEvt) {
         moveEvt.preventDefault();
 
         var shift = {
@@ -140,14 +130,27 @@ var onMainPinMousedown = function(evt) {
             x: moveEvt.clientX,
             y: moveEvt.clientY
         };
-        mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
-        if ((mainPin.offsetTop - shift.y) >= minY && (mainPin.offsetTop - shift.y) <= maxY) {
-            mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
+
+        var currentCoords = {
+            x: mainPin.offsetLeft - shift.x,
+            y: mainPin.offsetTop - shift.y
+        };
+
+
+        mainPin.style.left = currentCoords.x + 'px';
+        if ((mainPin.offsetTop - shift.y) >= MIN_Y && (mainPin.offsetTop - shift.y) <= MAX_Y) {
+            mainPin.style.top = currentCoords.y + 'px';
         }
+
+
+        var addressX = Math.round(currentCoords.x - (MAIN_PIN_WIDTH / 2));
+        var addressY = currentCoords.y - (MAIN_PIN_HEIGHT + MAIN_TAIL_HEIGHT);
+        inputAddress.value = addressX + ', ' + addressY;
+
     };
     var onMouseUp = function(upEvt) {
         upEvt.preventDefault();
-        getAddress();
+
         document.removeEventListener('mousemove', onMouseMove);
         document.removeEventListener('mouseup', onMouseUp);
     };
@@ -155,7 +158,6 @@ var onMainPinMousedown = function(evt) {
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
 };
-
 /*перемещение главного пина*/
 mainPin.addEventListener('mousedown', onMainPinMousedown);
 })();
