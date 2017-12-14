@@ -121,7 +121,7 @@ var getAddress = function () {
 };
 
 /*  функция перемещения главного пина*/
-var onMainPinMousedown = function (evt) {
+var onMainPinMousedown = function(evt) {
     evt.preventDefault();
 
     var startCoords = {
@@ -141,12 +141,11 @@ var onMainPinMousedown = function (evt) {
             y: moveEvt.clientY
         };
         mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
-        if ((mainPin.offsetTop - shift.y) >=
-            (minY) && (mainPin.offsetTop - shift.y) <= (maxY)) {
+        if ((mainPin.offsetTop - shift.y) >= minY && (mainPin.offsetTop - shift.y) <= maxY) {
             mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
         }
     };
-    var onMouseUp = function (upEvt) {
+    var onMouseUp = function(upEvt) {
         upEvt.preventDefault();
         getAddress();
         document.removeEventListener('mousemove', onMouseMove);
