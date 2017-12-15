@@ -3,80 +3,100 @@
   var noticeForm = document.querySelector('.notice__form');
   var inputTitle = noticeForm.querySelector('#title');
   var inputAddress = noticeForm.querySelector('#address');
-  var houseType = noticeForm.querySelector('#type');
-  var inputPrice = noticeForm.querySelector('#price');
   var timeIn = noticeForm.querySelector('#timein');
   var timeOut = noticeForm.querySelector('#timeout');
+  var apartmentType = noticeForm.querySelector('#type');
+  var pricePerNight = document.querySelector('#price');
   var roomNumber = noticeForm.querySelector('#room_number');
   var capacity = noticeForm.querySelector('#capacity');
 
-  /* время въезда и выезда*/
-  var optionsTime = timeIn.querySelectorAll('option');
-  var optionsTimeOut = timeOut.querySelectorAll('option');
-
-  /* функция синхронизации полей*/
-  var changeOption = function (arr, firstSelect, secondSelect) {
-    for (var i = 0; i < arr.length; i++) {
-      if (firstSelect.options.selectedIndex === i) {
-        secondSelect.options.selectedIndex = i;
-      }
-    }
+  /* функция для создания массивов из значений value*/
+  var getArray = function (element) {
+    var valuesArray = [];
+    valuesArray.forEach.call(element.options, function (item) {
+      valuesArray.push(item.value);
+    });
+    return valuesArray;
   };
 
+  /* Синхронизация полей времени заезда и выезда*/
+  /* создание массивов из значений value*/
+  var optionsTimeInArr = getArray(timeIn);
+  var optionsTimeOutArr = getArray(timeOut);
+
+  /* функция обратного вызова*/
+  var syncValues = function (element, value) {
+    element.value = value;
+  };
+
+  /* синхронизация в одну сторону*/
   timeIn.addEventListener('change', function () {
-    changeOption(optionsTime, timeIn, timeOut);
+    window.synchronizeFields(timeIn, timeOut, optionsTimeInArr, optionsTimeOutArr, syncValues);
   });
+
+  /* синхронизация в обратную сторону*/
   timeOut.addEventListener('change', function () {
-    changeOption(optionsTimeOut, timeOut, timeIn);
+    window.synchronizeFields(timeOut, timeIn, optionsTimeOutArr, optionsTimeInArr, syncValues);
   });
 
-  /* количество комнат связанное с количеством гостей */
-  var changeCapacity = function () {
-    switch (roomNumber.options[roomNumber.selectedIndex].value) {
-      case '1':
-        capacity.options.selectedIndex = '2';
-        break;
-      case '2':
-        capacity.options.selectedIndex = '1';
-        break;
-      case '3':
-        capacity.options.selectedIndex = '0';
-        break;
-      case '100':
-        capacity.options.selectedIndex = '3';
-        break;
-    }
+  /* Синхронизация типа жилья и минимальной цены*/
+  /* получение массива типов жилья из значений value*/
+  var optionsTypeArr = getArray(apartmentType);
+
+  /* соответствие  типов недвижимости и минимальной цены*/
+  var offerTypePrice = {
+    flat: 1000,
+    bungalo: 0,
+    house: 5000,
+    palace: 10000
   };
 
+  /* функция получения массива из значений свойств объекта*/
+  var getValueObjectArr = function (obj) {
+    var valuesArray = Object.values(obj);
+    return valuesArray;
+  };
+
+  /* получение массива минимальных значений (из объекта)*/
+  var minPriceArr = getValueObjectArr(offerTypePrice);
+
+  /* функция обратного вызова*/
+  var syncValueWithMin = function (element, value) {
+    element.min = value;
+  };
+
+  /* односторонняя синхронизация значения типов недвижимости с минимальным значением поля цены*/
+  apartmentType.addEventListener('change', function () {
+    window.synchronizeFields(apartmentType, pricePerNight, optionsTypeArr, minPriceArr, syncValueWithMin);
+  });
+
+  /* Синхронизация количества комнат с количеством гостей */
+  /* получение массива из значений количества комнат из значений value*/
+  var roomNumberArr = getArray(roomNumber);
+
+  /* соответствие  количества комнат и количества гостей*/
+  var roomsCapacity = {
+    '1': 1,
+    '2': 2,
+    '3': 3,
+    '100': 0
+  };
+
+  /* получение массива из значений количества гостей (из объекта) */
+  var capacityArr = getValueObjectArr(roomsCapacity);
+
+  /* односторонняя синхронизация */
   roomNumber.addEventListener('change', function () {
-    changeCapacity();
+    window.synchronizeFields(roomNumber, capacity, roomNumberArr, capacityArr, syncValues);
   });
 
-  /* поле тип жилья и минимальная цена*/
-  var changePrice = function () {
-    switch (houseType.options[houseType.selectedIndex].value) {
-      case 'bungalo':
-        inputPrice.min = '0';
-        break;
-      case 'flat':
-        inputPrice.min = '1000';
-        break;
-      case 'house':
-        inputPrice.min = '5000';
-        break;
-      case 'palace':
-        inputPrice.min = '10000';
-        break;
-    }
-  };
-  houseType.addEventListener('change', function () {
-    changePrice();
-  });
 
+  /* валидация полей формы*/
   /* устанавливает цвет рамки*/
   var setErrorColor = function (element) {
     element.style.outline = '2px solid red';
   };
+
   /* убирает ошибку*/
   var resetError = function (element) {
     element.setCustomValidity('');
@@ -105,13 +125,12 @@
     validityCheck(inputAddress, 'valueMissing', 'Обязательное поле');
   });
 
-
   /* проверка поля цена за ночь*/
-  inputPrice.addEventListener('invalid', function () {
-    resetError(inputPrice);
-    validityCheck(inputPrice, 'rangeUnderflow', 'Стоимость ниже рекомендованной');
-    validityCheck(inputPrice, 'rangeOverflow', 'Стоимость выше рекомендованной');
-    validityCheck(inputPrice, 'valueMissing', 'Обязательное поле');
+  pricePerNight.addEventListener('invalid', function () {
+    resetError(pricePerNight);
+    validityCheck(pricePerNight, 'rangeUnderflow', 'Стоимость ниже рекомендованной');
+    validityCheck(pricePerNight, 'rangeOverflow', 'Стоимость выше рекомендованной');
+    validityCheck(pricePerNight, 'valueMissing', 'Обязательное поле');
   });
 
 })();
