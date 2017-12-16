@@ -76,9 +76,14 @@
     for (var i = 0; i < allFieldsets.length; i++) {
       allFieldsets[i].removeAttribute('disabled');
     }
-    window.pinShow(window.pins);
-    /* добавляют события пинам*/
+
+
     var mapPins = mapWindow.querySelectorAll('.map__pin:not(.map__pin--main)');
+         var pinShow = function (){
+      window.displayItems(mapPins, 'visible');
+    };
+     pinShow();
+
     mapPins.forEach(function (el, j) {
       el.addEventListener('mouseup', function (evt) {
         window.show.showCard(evt, offers[j], popupOpen, popupClose);
@@ -89,7 +94,9 @@
         }
       });
     });
-  };
+
+
+    };
 
   /* перемещение главного пина*/
   /* ограничения перемещения главного пина по высоте*/

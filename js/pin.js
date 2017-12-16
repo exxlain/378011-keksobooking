@@ -38,17 +38,22 @@
       node.textContent = errorMessage;
       document.body.insertAdjacentElement('afterbegin', node);
     };
+window.displayItems = function (arr, condition) {
+     for (var i = 0; i < arr.length; i++) {
+         arr[i].style.visibility = condition;
+     }
+ };
 
   window.successHandler = function (data) {
       var pins = window.templateutil.getFragment(data, fillPin);
-     return pins;
-    };
+      window.templateutil.appendToNode(pinsListElement, pins);
+      var mapWindow = document.querySelector('.map');
+      var mapPins = mapWindow.querySelectorAll('.map__pin:not(.map__pin--main)');
+      displayItems(mapPins, 'hidden');
+
+  };
 
   window.backend.load(successHandler, errorHandler);
-
-  window.pinShow = function (pinsElement) {
-      window.templateutil.appendToNode(pinsListElement, pinsElement);
- };
 
 
 })();
