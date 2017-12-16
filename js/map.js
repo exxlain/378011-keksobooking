@@ -76,10 +76,7 @@
     for (var i = 0; i < allFieldsets.length; i++) {
       allFieldsets[i].removeAttribute('disabled');
     }
-    window.backend.load(window.pin.successHandler, window.pin.errorHandler);
-    /* добавить события map__pins ?*/
-
-
+    window.pinShow(window.pins);
     /* добавляют события пинам*/
     var mapPins = mapWindow.querySelectorAll('.map__pin:not(.map__pin--main)');
     mapPins.forEach(function (el, j) {

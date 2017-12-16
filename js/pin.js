@@ -6,7 +6,7 @@
   var pinsListElement = mapWindow.querySelector('.map__pins');
   var templateElement = document.querySelector('template').content;
   var mapPinTemplate = templateElement.querySelector('.map__pin');
-  var PIN_AMOUNT = 5;
+
 
   /* заполняет pin данными*/
   var fillPin = function (pin) {
@@ -32,21 +32,24 @@
   };
 
   /* обработчик успеха и ошибки*/
-  window.pin = {
-    successHandler: function (pins) {
-      var fragment = document.createDocumentFragment();
-      for (var i = 0; i < PIN_AMOUNT; i++) {
-        fragment.appendChild(fillPin(pins[i]));
-      }
-      pinsListElement.appendChild(fragment);
-      return pinsListElement;
-    },
-    errorHandler: function (errorMessage) {
+  var errorHandler = function (errorMessage) {
       var node = document.createElement('div');
       errorHandlerStyle(node);
       node.textContent = errorMessage;
       document.body.insertAdjacentElement('afterbegin', node);
-    }
-  };
+    };
+
+  window.successHandler = function (data) {
+      var pins = window.templateutil.getFragment(data, fillPin);
+     return pins;
+    };
+
+  window.backend.load(successHandler, errorHandler);
+
+  window.pinShow = function (pinsElement) {
+      window.templateutil.appendToNode(pinsListElement, pinsElement);
+ };
+
 
 })();
+
