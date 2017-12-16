@@ -77,12 +77,8 @@
       allFieldsets[i].removeAttribute('disabled');
     }
 
-
     var mapPins = mapWindow.querySelectorAll('.map__pin:not(.map__pin--main)');
-         var pinShow = function (){
-      window.displayItems(mapPins, 'visible');
-    };
-     pinShow();
+    window.displayItems(mapPins, 'visible');
 
     mapPins.forEach(function (el, j) {
       el.addEventListener('mouseup', function (evt) {
@@ -96,7 +92,7 @@
     });
 
 
-    };
+  };
 
   /* перемещение главного пина*/
   /* ограничения перемещения главного пина по высоте*/

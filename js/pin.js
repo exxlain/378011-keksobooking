@@ -1,7 +1,5 @@
 'use strict';
 (function () {
-  var offers = window.createOffersArray(8);
-
   var mapWindow = document.querySelector('.map');
   var pinsListElement = mapWindow.querySelector('.map__pins');
   var templateElement = document.querySelector('template').content;
@@ -33,28 +31,26 @@
 
   /* обработчик успеха и ошибки*/
   var errorHandler = function (errorMessage) {
-      var node = document.createElement('div');
-      errorHandlerStyle(node);
-      node.textContent = errorMessage;
-      document.body.insertAdjacentElement('afterbegin', node);
-    };
-window.displayItems = function (arr, condition) {
-     for (var i = 0; i < arr.length; i++) {
-         arr[i].style.visibility = condition;
-     }
- };
+    var node = document.createElement('div');
+    errorHandlerStyle(node);
+    node.textContent = errorMessage;
+    document.body.insertAdjacentElement('afterbegin', node);
+  };
+  window.displayItems = function (arr, condition) {
+    for (var i = 0; i < arr.length; i++) {
+      arr[i].style.visibility = condition;
+    }
+  };
 
-  window.successHandler = function (data) {
-      var pins = window.templateutil.getFragment(data, fillPin);
-      window.templateutil.appendToNode(pinsListElement, pins);
-      var mapWindow = document.querySelector('.map');
-      var mapPins = mapWindow.querySelectorAll('.map__pin:not(.map__pin--main)');
-      displayItems(mapPins, 'hidden');
-
+  var successHandler = function (data) {
+    var pins = window.templateutil.getFragment(data, fillPin);
+    window.templateutil.appendToNode(pinsListElement, pins);
+    var mapPins = mapWindow.querySelectorAll('.map__pin:not(.map__pin--main)');
+    window.displayItems(mapPins, 'hidden');
   };
 
   window.backend.load(successHandler, errorHandler);
 
-
 })();
+
 

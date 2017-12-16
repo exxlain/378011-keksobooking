@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-var PIN_MAX_QUANTITY = 5;
+  var PIN_MAX_QUANTITY = 5;
 
   window.templateutil = {
     /* создает фрагмент для вставки */
