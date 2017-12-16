@@ -76,9 +76,12 @@
     for (var i = 0; i < allFieldsets.length; i++) {
       allFieldsets[i].removeAttribute('disabled');
     }
-    window.pinShow();
-    var mapPins = mapWindow.querySelectorAll('.map__pin:not(.map__pin--main)');
+    window.backend.load(window.pin.successHandler, window.pin.errorHandler);
+    /* добавить события map__pins ?*/
+
+
     /* добавляют события пинам*/
+    var mapPins = mapWindow.querySelectorAll('.map__pin:not(.map__pin--main)');
     mapPins.forEach(function (el, j) {
       el.addEventListener('mouseup', function (evt) {
         window.show.showCard(evt, offers[j], popupOpen, popupClose);
@@ -137,8 +140,8 @@
       var addressX = Math.round(currentCoords.x - (MAIN_PIN_WIDTH / 2));
       var addressY = currentCoords.y - (MAIN_PIN_HEIGHT + MAIN_TAIL_HEIGHT);
       inputAddress.value = addressX + ', ' + addressY;
-
     };
+
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
 

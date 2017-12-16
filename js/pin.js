@@ -6,6 +6,7 @@
   var pinsListElement = mapWindow.querySelector('.map__pins');
   var templateElement = document.querySelector('template').content;
   var mapPinTemplate = templateElement.querySelector('.map__pin');
+  var PIN_AMOUNT = 5;
 
   /* заполняет pin данными*/
   var fillPin = function (pin) {
@@ -18,13 +19,34 @@
     return pinElement;
   };
 
-  /* генерирует пины*/
-  var pins = window.templateutil.getFragment(offers, fillPin);
+  /* стиль обработчика ошибки*/
+  var errorHandlerStyle = function (nodeName) {
+    nodeName.style.zIndex = '100';
+    nodeName.style.margin = '0 auto';
+    nodeName.style.textAlign = 'center';
+    nodeName.style.backgroundColor = 'red';
+    nodeName.style.position = 'absolute';
+    nodeName.style.left = 0;
+    nodeName.style.right = 0;
+    nodeName.style.fontSize = '30px';
+  };
 
-
-  /* отображает пины*/
-  window.pinShow = function () {
-    window.templateutil.appendToNode(pinsListElement, pins);
+  /* обработчик успеха и ошибки*/
+  window.pin = {
+    successHandler: function (pins) {
+      var fragment = document.createDocumentFragment();
+      for (var i = 0; i < PIN_AMOUNT; i++) {
+        fragment.appendChild(fillPin(pins[i]));
+      }
+      pinsListElement.appendChild(fragment);
+      return pinsListElement;
+    },
+    errorHandler: function (errorMessage) {
+      var node = document.createElement('div');
+      errorHandlerStyle(node);
+      node.textContent = errorMessage;
+      document.body.insertAdjacentElement('afterbegin', node);
+    }
   };
 
 })();
