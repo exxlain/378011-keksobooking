@@ -11,11 +11,13 @@
     return newLi;
   };
     /* создает элемент picture для фотографий*/
+/*
  var createPicture = function (picture) {
     var newLi = document.createElement('li');
     newLi.innerHTML = '<img src="' + picture + '">';
     return newLi;
   };
+*/
 
   /* заменяет английский на русский в названии удобства*/
   var getOfferType = function (type) {

@@ -9,16 +9,22 @@
   var pricePerNight = document.querySelector('#price');
   var roomNumber = noticeForm.querySelector('#room_number');
   var capacity = noticeForm.querySelector('#capacity');
-
+  var formReset = noticeForm.querySelector('.form__reset');
 
   /* обработчик отправки формы*/
   noticeForm.addEventListener('submit', function (evt) {
     window.backend.save(new FormData(noticeForm), function () {
       noticeForm.reset();
+      inputAddress.value = '568, 288';
     });
     evt.preventDefault();
   });
 
+formReset.addEventListener('click', function (evt) {
+      evt.preventDefault();
+      noticeForm.reset();
+      inputAddress.value = '568, 288';
+    });
 
   /* функция для создания массивов из значений value*/
   var getArray = function (element) {
