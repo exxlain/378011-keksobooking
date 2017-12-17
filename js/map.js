@@ -1,8 +1,6 @@
 'use strict';
 (function () {
 
-  /*var offers = window.createOffersArray(8);*/
-
   var ENTER_KEYCODE = 13;
   var ESC_KEYCODE = 27;
   var mapWindow = document.querySelector('.map');
@@ -54,9 +52,9 @@
   /* отображение попапа*/
   var popupOpen = function (obj) {
 
-/*    var cardElement = window.fillCard(obj);
+ var cardElement = window.fillCard(obj);
 
-    mapWindow.insertBefore(cardElement, mapFiltersElement);*/
+    mapWindow.insertBefore(cardElement, mapFiltersElement);
 
     cardElement.querySelector('.popup__close').addEventListener('click', function () {
       popupClose(cardElement);
@@ -82,16 +80,14 @@
 
     mapPins.forEach(function (el, j) {
       el.addEventListener('mouseup', function (evt) {
-        window.show.showCard(evt, offers[j], popupOpen, popupClose);
+        window.show.showCard(evt, window.offers[j], popupOpen, popupClose);
       });
       el.addEventListener('keydown', function (evt) {
         if (evt.keyCode === ENTER_KEYCODE) {
-          window.show.showCard(evt, offers[j], popupOpen, popupClose);
+          window.show.showCard(evt, window.offers[j], popupOpen, popupClose);
         }
       });
     });
-
-
   };
 
   /* перемещение главного пина*/

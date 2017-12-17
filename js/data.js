@@ -22,7 +22,7 @@
   var OFFER_PHOTOS = [];
 
   /* создает массив  объектов заданной длины, описывающих похожие объявления неподалеку*/
-  /*window.createOffersArray = function (lengthArray) {
+  window.createOffersArray = function (lengthArray) {
     var arr = [];
     for (var i = 0; i < lengthArray; i++) {
       var coordX = window.randomutil.getRandomInteger(300, 900);
@@ -53,6 +53,6 @@
       });
     }
     return arr;
-  };*/
+  };
 
 })();

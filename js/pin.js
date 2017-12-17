@@ -41,8 +41,9 @@
       arr[i].style.visibility = condition;
     }
   };
-
+window.offers = [];
   var successHandler = function (data) {
+    window.offers = data;
     var pins = window.templateutil.getFragment(data, fillPin);
     window.templateutil.appendToNode(pinsListElement, pins);
     var mapPins = mapWindow.querySelectorAll('.map__pin:not(.map__pin--main)');
