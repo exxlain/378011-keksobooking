@@ -1,7 +1,7 @@
 'use strict';
 (function () {
 
-  var offers = window.createOffersArray(8);
+  /*var offers = window.createOffersArray(8);*/
 
   var ENTER_KEYCODE = 13;
   var ESC_KEYCODE = 27;
@@ -54,9 +54,9 @@
   /* отображение попапа*/
   var popupOpen = function (obj) {
 
-    var cardElement = window.fillCard(obj);
+/*    var cardElement = window.fillCard(obj);
 
-    mapWindow.insertBefore(cardElement, mapFiltersElement);
+    mapWindow.insertBefore(cardElement, mapFiltersElement);*/
 
     cardElement.querySelector('.popup__close').addEventListener('click', function () {
       popupClose(cardElement);
