@@ -76,7 +76,7 @@
     }
 
     var mapPins = mapWindow.querySelectorAll('.map__pin:not(.map__pin--main)');
-    window.displayItems(mapPins, 'visible');
+    window.displayPins(mapPins, 'visible'); // при нажатии на главный пин отобразила только пять
 
     mapPins.forEach(function (el, j) {
       el.addEventListener('mouseup', function (evt) {
