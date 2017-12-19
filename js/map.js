@@ -51,8 +51,7 @@
   };
   /* отображение попапа*/
   var popupOpen = function (obj) {
-
- var cardElement = window.fillCard(obj);
+    var cardElement = window.fillCard(obj);
 
     mapWindow.insertBefore(cardElement, mapFiltersElement);
 
@@ -66,19 +65,9 @@
       onPopupEscPress(evt, document.querySelector('.popup'));
     });
   };
-
-  /* активирует форму и карту, показывает пины, добавляет им обработчики*/
-  var onMainPinMouseup = function () {
-    mapWindow.classList.remove('map--faded');
-    noticeForm.classList.remove('notice__form--disabled');
-    for (var i = 0; i < allFieldsets.length; i++) {
-      allFieldsets[i].removeAttribute('disabled');
-    }
-
-    var mapPins = mapWindow.querySelectorAll('.map__pin:not(.map__pin--main)');
-    window.displayPins(mapPins, 'visible'); // при нажатии на главный пин отобразила только пять
-
-    mapPins.forEach(function (el, j) {
+  /*навешивает обработчики на пины*/
+  window.addListeners = function (pins){
+    pins.forEach(function (el, j) {
       el.addEventListener('mouseup', function (evt) {
         window.show.showCard(evt, window.offers[j], popupOpen, popupClose);
       });
@@ -88,6 +77,17 @@
         }
       });
     });
+  };
+  /* активирует форму и карту, показывает пины, добавляет им обработчики*/
+  var onMainPinMouseup = function () {
+    mapWindow.classList.remove('map--faded');
+    noticeForm.classList.remove('notice__form--disabled');
+    for (var i = 0; i < allFieldsets.length; i++) {
+      allFieldsets[i].removeAttribute('disabled');
+    }
+     var mapPins = mapWindow.querySelectorAll('.map__pin:not(.map__pin--main)');
+    window.displayPins(mapPins, 'remove'); // при нажатии на главный пин отобразила только пять
+    window.addListeners(mapPins);
   };
 
   /* перемещение главного пина*/

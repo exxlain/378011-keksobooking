@@ -14,7 +14,7 @@
   var filterConditioner = housingFeatures.querySelector('#filter-conditioner');
 
   var mapWindow = document.querySelector('.map');
-  var mapPinsContainer = mapWindow.querySelector('.map__pins');
+  var pinsListElement = mapWindow.querySelector('.map__pins');
   var mapPins = mapWindow.querySelectorAll('.map__pin:not(.map__pin--main)');
 
   var typeValue;
@@ -42,24 +42,28 @@
   };
 
   /* система сравнения*/
-  var getRank = function (offer) {
+  var getRank = function (currentOffer) {
     var rank = 0;
-    if (offer.type === typeValue) {
+
+    if (currentOffer.offer.type === typeValue) {
+      rank += 1;
+
+    }
+    if (getPriceInterval(currentOffer.offer.price) === priceValue) {
       rank += 1;
     }
-    if (getPriceInterval(offer.price) === priceValue) {
+      if (String(currentOffer.offer.rooms) === roomsValue) {
+      rank += 1;
+
+    }
+    if (String(currentOffer.offer.guests) === guestsValue) {
       rank += 1;
     }
-    if (offer.rooms === roomsValue) {
-      rank += 1;
-    }
-    if (offer.guests === guestsValue) {
-      rank += 1;
-    }
-    var featuresItem;
-    for (var i = 0; i < offer.features.length; i++) {
-      featuresItem = offer.features[i];
-      if (featuresItem === wifiValue || featuresItem === dishwasherValue || featuresItem === parkingValue || featuresItem === washerValue || featuresItem === elevatorValue || featuresItem === conditionerValue) {
+
+  var featuresItem;
+    for (var i = 0; i < currentOffer.offer.features.length; i++) {
+    featuresItem = currentOffer.offer.features[i];
+      if (currentOffer.offer.features[i] === wifiValue || featuresItem === dishwasherValue || featuresItem === parkingValue || featuresItem === washerValue || featuresItem === elevatorValue || featuresItem === conditionerValue) {
         rank += 1;
       }
     }
@@ -67,75 +71,102 @@
     return rank;
   };
 
+/*сортировка массива offers*/
+window.sortedOffers =[];
+ var updateOffers = function () {
+  window.sortedOffers = window.offers.sort(function (left, right) {
+       return getRank(right) - getRank(left);
+     });
+   window.render(window.sortedOffers);
+   };
+
+ /* показывает пины и навешивает обработчики*/
+var showPins = function(pins){
+    var pins = mapWindow.querySelectorAll('.map__pin:not(.map__pin--main)');
+    window.displayPins(pins, 'remove');
+    window.addListeners(pins);
+};
   /* обработчики на полях*/
   housingType.addEventListener('change', function () {
     typeValue = housingType.value;
     updateOffers();
+    showPins(mapPins);
   });
   housingPrice.addEventListener('change', function () {
     priceValue = housingPrice.value;
     updateOffers();
+    showPins(mapPins);
   });
-  housingRooms.addEventListener('change', function () {
+    housingRooms.addEventListener('change', function () {
     roomsValue = housingRooms.value;
     updateOffers();
+    showPins(mapPins);
+      console.log(roomsValue);
   });
   housingGuests.addEventListener('change', function () {
     guestsValue = housingGuests.value;
     updateOffers();
-  });
-  /* поверка чекбокса */
-  var getCheckboxValue = function (checkboxName, checkboxValue) {
-    if (checkboxName.checked) {
-      checkboxValue = checkboxName.value;
-    }
-    return checkboxValue;
-  };
-  /* обработчики на чекбоксах*/
-  filterWifi.addEventListener('change', function () {
-    getCheckboxValue(filterWifi, wifiValue);
-    updateOffers();
-  });
-  filterDishwasher.addEventListener('change', function () {
-    getCheckboxValue(filterDishwasher, dishwasherValue);
-    updateOffers();
-  });
-  filterParking.addEventListener('change', function () {
-    getCheckboxValue(filterParking, parkingValue);
-    updateOffers();
-  });
-  filterWasher.addEventListener('change', function () {
-    getCheckboxValue(filterWasher, washerValue);
-    updateOffers();
-  });
-  filterElevator.addEventListener('change', function () {
-    getCheckboxValue(filterElevator, elevatorValue);
-    updateOffers();
-  });
-  filterConditioner.addEventListener('change', function () {
-    getCheckboxValue(filterConditioner, conditionerValue);
-    updateOffers();
+    showPins(mapPins);
   });
 
-  /* обработчик успеха*/
+
+
+
+  /* обработчики на чекбоксах*/
+  filterWifi.addEventListener('change', function () {
+    if (filterWifi.checked) {
+      wifiValue = filterWifi.value;
+    }
+     updateOffers();
+    showPins(mapPins);
+
+  });
+  filterDishwasher.addEventListener('change', function () {
+     if (filterDishwasher.checked) {
+      dishwasherValue = filterDishwasher.value;
+    }
+    updateOffers();
+    showPins(mapPins);
+  });
+  filterParking.addEventListener('change', function () {
+  if (filterParking.checked) {
+      parkingValue = filterParking.value;
+    }
+    updateOffers();
+    showPins(mapPins);
+  });
+  filterWasher.addEventListener('change', function () {
+    if (filterWasher.checked) {
+      washerValue = filterWasher.value;
+    }
+    updateOffers();
+    showPins(mapPins);
+  });
+  filterElevator.addEventListener('change', function () {
+     if (filterElevator.checked) {
+      elevatorValue = filterElevator.value;
+    }
+    updateOffers();
+    showPins(mapPins);
+  });
+  filterConditioner.addEventListener('change', function () {
+     if ( filterConditioner.checked) {
+      conditionerValue =  filterConditioner.value;
+    }
+    updateOffers();
+    showPins(mapPins);
+  });
+
+
+
+
+    /* обработчик успеха*/
   window.offers = [];
   var successHandler = function (data) {
     window.offers = data;
-    window.render(window.offers);
+    updateOffers();
   };
-  /* как сделано в демке:
-  var updateOffers = function () {
-      window.render(offers.sort(function (left, right) {
-        return getRank(right) - getRank(left);
-      }));
-    };*/
-  /*  сортировка массива offers*/
-  window.sortedOffers =[];
-  var updateOffers = function () {
-    window.sortedOffers = window.offers.sort(function (left, right) {
-      return getRank(right) - getRank(left);
-    });
-  };
+
   /* стиль обработчика ошибки*/
   var errorHandlerStyle = function (nodeName) {
     nodeName.style.zIndex = '100';
