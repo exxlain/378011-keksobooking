@@ -101,7 +101,6 @@ var showPins = function(pins){
     roomsValue = housingRooms.value;
     updateOffers();
     showPins(mapPins);
-      console.log(roomsValue);
   });
   housingGuests.addEventListener('change', function () {
     guestsValue = housingGuests.value;

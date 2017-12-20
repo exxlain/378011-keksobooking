@@ -11,13 +11,13 @@
     return newLi;
   };
     /* создает элемент picture для фотографий*/
-/*
+
  var createPicture = function (picture) {
     var newLi = document.createElement('li');
     newLi.innerHTML = '<img src="' + picture + '">';
     return newLi;
   };
-*/
+
 
   /* заменяет английский на русский в названии удобства*/
   var getOfferType = function (type) {
@@ -56,10 +56,18 @@
 
     var pictirePlace = cardElement.querySelector('.popup__pictures');
     pictirePlace.innerHTML = '';
-/*  загрузка фотографий
+/* фотографии*/
     var pictureFragment = window.templateutil.getFragment(card.offer.photos, createPicture);
     pictirePlace.appendChild(pictureFragment);
-*/
+
+    var pictures = pictirePlace.querySelectorAll('img');
+      if (pictures){
+        pictures.forEach(function (el) {
+          el.style.width = '42px';
+          el.style.height= '42px';
+        });
+      }
+
       return cardElement;
   };
 
