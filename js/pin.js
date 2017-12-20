@@ -14,8 +14,7 @@
   var filterConditioner = housingFeatures.querySelector('#filter-conditioner');
 
   var mapWindow = document.querySelector('.map');
-  var pinsListElement = mapWindow.querySelector('.map__pins');
-  var mapPins = mapWindow.querySelectorAll('.map__pin:not(.map__pin--main)');
+
 
   var typeValue;
   var priceValue;
@@ -44,7 +43,6 @@
   /* система сравнения*/
   var getRank = function (currentOffer) {
     var rank = 0;
-
     if (currentOffer.offer.type === typeValue) {
       rank += 1;
 
@@ -52,7 +50,7 @@
     if (getPriceInterval(currentOffer.offer.price) === priceValue) {
       rank += 1;
     }
-      if (String(currentOffer.offer.rooms) === roomsValue) {
+    if (String(currentOffer.offer.rooms) === roomsValue) {
       rank += 1;
 
     }
@@ -60,122 +58,119 @@
       rank += 1;
     }
 
-  var featuresItem;
+    var featuresItem;
     for (var i = 0; i < currentOffer.offer.features.length; i++) {
-    featuresItem = currentOffer.offer.features[i];
+      featuresItem = currentOffer.offer.features[i];
       if (currentOffer.offer.features[i] === wifiValue || featuresItem === dishwasherValue || featuresItem === parkingValue || featuresItem === washerValue || featuresItem === elevatorValue || featuresItem === conditionerValue) {
         rank += 1;
       }
     }
-
     return rank;
   };
 
-/*сортировка массива offers*/
-window.sortedOffers =[];
- var updateOffers = function () {
-  window.sortedOffers = window.offers.sort(function (left, right) {
-       return getRank(right) - getRank(left);
-     });
-   window.render(window.sortedOffers);
-   };
+  /* сортировка массива offers*/
+  window.sortedOffers = [];
+  var updateOffers = function () {
+    window.sortedOffers = window.offers.sort(function (left, right) {
+      return getRank(right) - getRank(left);
+    });
+    window.render(window.sortedOffers);
+  };
 
- /* показывает пины и навешивает обработчики*/
-var showPins = function(pins){
-    var pins = mapWindow.querySelectorAll('.map__pin:not(.map__pin--main)');
-    window.displayPins(pins, 'remove');
-    window.addListeners(pins);
-};
+  /* показывает пины и навешивает обработчики*/
+  var showPins = function () {
+    var mapPins = mapWindow.querySelectorAll('.map__pin:not(.map__pin--main)');
+    window.displayPins(mapPins, 'remove');
+    window.addListeners(mapPins);
+  };
 
- /* закрывает попап*/
-window.closeOpenPopup = function() {
+  /* закрывает попап*/
+  window.closeOpenPopup = function () {
     var currentPopup = document.querySelector('.popup');
-        if (currentPopup) {
-          window.popupClose(currentPopup);
-          }
- };
+    if (currentPopup) {
+      window.popupClose(currentPopup);
+    }
+  };
 
   /* обработчики на полях*/
   housingType.addEventListener('change', function () {
-    closeOpenPopup();
+    window.closeOpenPopup();
     typeValue = housingType.value;
     updateOffers();
-    showPins(mapPins);
+    showPins();
   });
   housingPrice.addEventListener('change', function () {
-    closeOpenPopup();
+    window.closeOpenPopup();
     priceValue = housingPrice.value;
     updateOffers();
-    showPins(mapPins);
+    showPins();
   });
-    housingRooms.addEventListener('change', function () {
-    closeOpenPopup();
+  housingRooms.addEventListener('change', function () {
+    window.closeOpenPopup();
     roomsValue = housingRooms.value;
     updateOffers();
-    showPins(mapPins);
+    showPins();
   });
   housingGuests.addEventListener('change', function () {
-    closeOpenPopup();
+    window.closeOpenPopup();
     guestsValue = housingGuests.value;
     updateOffers();
-    showPins(mapPins);
+    showPins();
   });
-
-
 
 
   /* обработчики на чекбоксах*/
   filterWifi.addEventListener('change', function () {
-    closeOpenPopup();
+    window.closeOpenPopup();
     if (filterWifi.checked) {
       wifiValue = filterWifi.value;
     }
-     updateOffers();
-     showPins(mapPins);
+    updateOffers();
+    showPins();
   });
   filterDishwasher.addEventListener('change', function () {
-     closeOpenPopup();
+    window.closeOpenPopup();
     if (filterDishwasher.checked) {
       dishwasherValue = filterDishwasher.value;
     }
     updateOffers();
-    showPins(mapPins);
+    showPins();
   });
   filterParking.addEventListener('change', function () {
-    closeOpenPopup();
+    window.closeOpenPopup();
     if (filterParking.checked) {
       parkingValue = filterParking.value;
     }
     updateOffers();
-    showPins(mapPins);
+    showPins();
   });
   filterWasher.addEventListener('change', function () {
-    closeOpenPopup();
+    window.closeOpenPopup();
     if (filterWasher.checked) {
       washerValue = filterWasher.value;
     }
     updateOffers();
-    showPins(mapPins);
+    showPins();
   });
   filterElevator.addEventListener('change', function () {
-     closeOpenPopup();
+    window.closeOpenPopup();
     if (filterElevator.checked) {
       elevatorValue = filterElevator.value;
     }
     updateOffers();
-    showPins(mapPins);
+    showPins();
   });
   filterConditioner.addEventListener('change', function () {
-     closeOpenPopup();
-    if ( filterConditioner.checked) {
-      conditionerValue =  filterConditioner.value;
+    window.closeOpenPopup();
+    if (filterConditioner.checked) {
+      conditionerValue = filterConditioner.value;
     }
     updateOffers();
-    showPins(mapPins);
+    showPins();
   });
 
 
-    /* обработчик успеха*/
+  /* обработчик успеха*/
   window.offers = [];
   var successHandler = function (data) {
     window.offers = data;

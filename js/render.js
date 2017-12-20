@@ -16,33 +16,33 @@
     return pinElement;
   };
 
-
   window.displayItems = function (arr, action) {
     for (var i = 0; i < arr.length; i++) {
       arr[i].classList[action]('hidden');
     }
   };
-   var PIN_MAX_QUANTITY = 5;
+
+  var PIN_MAX_QUANTITY = 5;
   window.displayPins = function (arr, action) {
     for (var i = 0; i < PIN_MAX_QUANTITY; i++) {
-     arr[i].classList[action]('hidden');
+      arr[i].classList[action]('hidden');
     }
   };
 
-   window.render = function(data) {
-     var mapPins = mapWindow.querySelectorAll('.map__pin:not(.map__pin--main)');
-     if(mapPins) {
-       mapPins.forEach(function(el, i, arr) {
-         pinsListElement.removeChild(el);
-       });
-     }
-     var takeNumber = data.length;
-     for(var i = 0; i < takeNumber; i++) {
+  window.render = function (data) {
+    var mapPins = mapWindow.querySelectorAll('.map__pin:not(.map__pin--main)');
+    if (mapPins) {
+      mapPins.forEach(function (el) {
+        pinsListElement.removeChild(el);
+      });
+    }
+    var takeNumber = data.length;
+    for (var i = 0; i < takeNumber; i++) {
       pinsListElement.appendChild(fillPin(data[i]));
-     }
-     var mapPins = mapWindow.querySelectorAll('.map__pin:not(.map__pin--main)');
-     window.displayItems(mapPins, 'add'); //спрятала все пины сразу после загрузки - при открытии страницы
-   };
+    }
+    mapPins = mapWindow.querySelectorAll('.map__pin:not(.map__pin--main)');
+    window.displayItems(mapPins, 'add'); // спрятала все пины сразу после загрузки - при открытии страницы
+  };
 
 
 })();

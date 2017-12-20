@@ -5,19 +5,18 @@
   var mapCardTemplate = templateElement.querySelector('.map__card');
 
   /* создает элемент feature*/
- var createFeature = function (feature) {
+  var createFeature = function (feature) {
     var newLi = document.createElement('li');
     newLi.className = 'feature feature--' + feature;
     return newLi;
   };
-    /* создает элемент picture для фотографий*/
 
- var createPicture = function (picture) {
+  /* создает элемент picture для фотографий*/
+  var createPicture = function (picture) {
     var newLi = document.createElement('li');
     newLi.innerHTML = '<img src="' + picture + '">';
     return newLi;
   };
-
 
   /* заменяет английский на русский в названии удобства*/
   var getOfferType = function (type) {
@@ -36,9 +35,8 @@
     return offerType;
   };
 
-
   /* заполняет карточку данными*/
-    window.fillCard = function (card) {
+  window.fillCard = function (card) {
     var cardElement = mapCardTemplate.cloneNode(true);
     cardElement.querySelector('h3').textContent = card.offer.title;
     cardElement.querySelector('p small').textContent = card.offer.address;
@@ -56,19 +54,17 @@
 
     var pictirePlace = cardElement.querySelector('.popup__pictures');
     pictirePlace.innerHTML = '';
-/* фотографии*/
     var pictureFragment = window.templateutil.getFragment(card.offer.photos, createPicture);
     pictirePlace.appendChild(pictureFragment);
 
     var pictures = pictirePlace.querySelectorAll('img');
-      if (pictures){
-        pictures.forEach(function (el) {
-          el.style.width = '42px';
-          el.style.height= '42px';
-        });
-      }
-
-      return cardElement;
+    if (pictures) {
+      pictures.forEach(function (el) {
+        el.style.width = '42px';
+        el.style.height = '42px';
+      });
+    }
+    return cardElement;
   };
 
 })();

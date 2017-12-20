@@ -20,11 +20,11 @@
     evt.preventDefault();
   });
 
-formReset.addEventListener('click', function (evt) {
-      evt.preventDefault();
-      noticeForm.reset();
-      inputAddress.value = '568, 288';
-    });
+  formReset.addEventListener('click', function (evt) {
+    evt.preventDefault();
+    noticeForm.reset();
+    inputAddress.value = '568, 288';
+  });
 
   /* функция для создания массивов из значений value*/
   var getArray = function (element) {

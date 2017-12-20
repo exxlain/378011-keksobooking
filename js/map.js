@@ -25,30 +25,17 @@
   /* обработчик enter на крестике*/
   var onCloseElementEnterPress = function (evt, currentOffer) {
     if (evt.keyCode === ENTER_KEYCODE) {
-      popupClose(currentOffer);
+      window.popupClose(currentOffer);
     }
   };
   /* обработчик события закрытия попапа по esc*/
   var onPopupEscPress = function (evt, currentOffer) {
     if (evt.keyCode === ESC_KEYCODE) {
-      popupClose(currentOffer);
+      window.popupClose(currentOffer);
     }
   };
 
-  /* закрывает попап*/
-  window.popupClose = function (currentOffer) {
-    mapWindow.querySelector('.map__pin--active').classList.remove('map__pin--active');
-    currentOffer.querySelector('.popup__close').removeEventListener('click', function () {
-      popupClose(currentOffer);
-    });
-    currentOffer.querySelector('.popup__close').removeEventListener('keydown', function (evt) {
-      onCloseElementEnterPress(evt, currentOffer);
-    });
-    document.removeEventListener('keydown', function (evt) {
-      onPopupEscPress(evt, currentOffer);
-    });
-    mapWindow.removeChild(currentOffer);
-  };
+
   /* отображение попапа*/
   var popupOpen = function (obj) {
     var cardElement = window.fillCard(obj);
@@ -56,7 +43,7 @@
     mapWindow.insertBefore(cardElement, mapFiltersElement);
 
     cardElement.querySelector('.popup__close').addEventListener('click', function () {
-      popupClose(cardElement);
+      window.popupClose(cardElement);
     });
     cardElement.querySelector('.popup__close').addEventListener('keydown', function (evt) {
       onCloseElementEnterPress(evt, cardElement);
@@ -65,15 +52,15 @@
       onPopupEscPress(evt, document.querySelector('.popup'));
     });
   };
-  /*навешивает обработчики на пины*/
-  window.addListeners = function (pins){
+  /* навешивает обработчики на пины*/
+  window.addListeners = function (pins) {
     pins.forEach(function (el, j) {
       el.addEventListener('mouseup', function (evt) {
-        window.show.showCard(evt, window.offers[j], popupOpen, popupClose);
+        window.show.showCard(evt, window.offers[j], popupOpen, window.popupClose);
       });
       el.addEventListener('keydown', function (evt) {
         if (evt.keyCode === ENTER_KEYCODE) {
-          window.show.showCard(evt, window.offers[j], popupOpen, popupClose);
+          window.show.showCard(evt, window.offers[j], popupOpen, window.popupClose);
         }
       });
     });
@@ -85,7 +72,7 @@
     for (var i = 0; i < allFieldsets.length; i++) {
       allFieldsets[i].removeAttribute('disabled');
     }
-     var mapPins = mapWindow.querySelectorAll('.map__pin:not(.map__pin--main)');
+    var mapPins = mapWindow.querySelectorAll('.map__pin:not(.map__pin--main)');
     window.displayPins(mapPins, 'remove'); // при нажатии на главный пин отобразила только пять
     window.addListeners(mapPins);
   };
@@ -150,5 +137,20 @@
   };
   /* обработчик перемещения главного пина*/
   mainPin.addEventListener('mousedown', onMainPinMousedown);
+
+  /* закрывает попап*/
+  window.popupClose = function (currentOffer) {
+    mapWindow.querySelector('.map__pin--active').classList.remove('map__pin--active');
+    currentOffer.querySelector('.popup__close').removeEventListener('click', function () {
+      window.popupClose(currentOffer);
+    });
+    currentOffer.querySelector('.popup__close').removeEventListener('keydown', function (evt) {
+      onCloseElementEnterPress(evt, currentOffer);
+    });
+    document.removeEventListener('keydown', function (evt) {
+      onPopupEscPress(evt, currentOffer);
+    });
+    mapWindow.removeChild(currentOffer);
+  };
 
 })();

@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-   window.templateutil = {
+  window.templateutil = {
     /* создает фрагмент для вставки */
     getFragment: function (arr, func) {
       var fragment = document.createDocumentFragment();
