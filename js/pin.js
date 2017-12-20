@@ -13,8 +13,6 @@
   var filterElevator = housingFeatures.querySelector('#filter-elevator');
   var filterConditioner = housingFeatures.querySelector('#filter-conditioner');
 
-  var mapWindow = document.querySelector('.map');
-
   var typeValue;
   var priceValue;
   var roomsValue;
@@ -44,14 +42,12 @@
     var rank = 0;
     if (currentOffer.offer.type === typeValue) {
       rank += 1;
-
     }
     if (getPriceInterval(currentOffer.offer.price) === priceValue) {
       rank += 1;
     }
     if (String(currentOffer.offer.rooms) === roomsValue) {
       rank += 1;
-
     }
     if (String(currentOffer.offer.guests) === guestsValue) {
       rank += 1;
@@ -89,14 +85,9 @@
       return rankDiff;
     });
     window.render(window.sortedOffers);
+    /* window.showPins();*/
   };
 
-  /* показывает пины и навешивает обработчики*/
-  var showPins = function () {
-    var mapPins = mapWindow.querySelectorAll('.map__pin:not(.map__pin--main)');
-    window.displayPins(mapPins, 'remove');
-    window.addListeners(mapPins);
-  };
 
   /* закрывает попап*/
   window.closeOpenPopup = function () {
@@ -111,25 +102,25 @@
     window.closeOpenPopup();
     typeValue = housingType.value;
     updateOffers();
-    showPins();
+    window.showPins();
   });
   housingPrice.addEventListener('change', function () {
     window.closeOpenPopup();
     priceValue = housingPrice.value;
     updateOffers();
-    showPins();
+    window.showPins();
   });
   housingRooms.addEventListener('change', function () {
     window.closeOpenPopup();
     roomsValue = housingRooms.value;
     updateOffers();
-    showPins();
+    window.showPins();
   });
   housingGuests.addEventListener('change', function () {
     window.closeOpenPopup();
     guestsValue = housingGuests.value;
     updateOffers();
-    showPins();
+    window.showPins();
   });
 
 
@@ -140,7 +131,7 @@
       wifiValue = filterWifi.value;
     }
     updateOffers();
-    showPins();
+    window.showPins();
   });
   filterDishwasher.addEventListener('change', function () {
     window.closeOpenPopup();
@@ -148,7 +139,7 @@
       dishwasherValue = filterDishwasher.value;
     }
     updateOffers();
-    showPins();
+    window.showPins();
   });
   filterParking.addEventListener('change', function () {
     window.closeOpenPopup();
@@ -156,7 +147,7 @@
       parkingValue = filterParking.value;
     }
     updateOffers();
-    showPins();
+    window.showPins();
   });
   filterWasher.addEventListener('change', function () {
     window.closeOpenPopup();
@@ -164,7 +155,7 @@
       washerValue = filterWasher.value;
     }
     updateOffers();
-    showPins();
+    window.showPins();
   });
   filterElevator.addEventListener('change', function () {
     window.closeOpenPopup();
@@ -172,7 +163,7 @@
       elevatorValue = filterElevator.value;
     }
     updateOffers();
-    showPins();
+    window.showPins();
   });
   filterConditioner.addEventListener('change', function () {
     window.closeOpenPopup();
@@ -180,7 +171,7 @@
       conditionerValue = filterConditioner.value;
     }
     updateOffers();
-    showPins();
+    window.showPins();
   });
 
 

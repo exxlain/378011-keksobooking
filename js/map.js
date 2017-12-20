@@ -52,8 +52,9 @@
       onPopupEscPress(evt, document.querySelector('.popup'));
     });
   };
+
   /* навешивает обработчики на пины*/
-  window.addListeners = function (pins) {
+  window.addPinsListeners = function (pins) {
     pins.forEach(function (el, j) {
       el.addEventListener('mouseup', function (evt) {
         window.show.showCard(evt, window.offers[j], popupOpen, window.popupClose);
@@ -65,6 +66,21 @@
       });
     });
   };
+
+  var PIN_MAX_QUANTITY = 5;
+  var displayPins = function (arr, action) {
+    for (var i = 0; i < PIN_MAX_QUANTITY; i++) {
+      arr[i].classList[action]('hidden');
+    }
+  };
+
+  /* показывает пины и навешивает обработчики*/
+  window.showPins = function () {
+    var mapPins = mapWindow.querySelectorAll('.map__pin:not(.map__pin--main)');
+    displayPins(mapPins, 'remove');
+    window.addPinsListeners(mapPins);
+  };
+
   /* активирует форму и карту, показывает пины, добавляет им обработчики*/
   var onMainPinMouseup = function () {
     mapWindow.classList.remove('map--faded');
@@ -72,9 +88,7 @@
     for (var i = 0; i < allFieldsets.length; i++) {
       allFieldsets[i].removeAttribute('disabled');
     }
-    var mapPins = mapWindow.querySelectorAll('.map__pin:not(.map__pin--main)');
-    window.displayPins(mapPins, 'remove'); // при нажатии на главный пин отобразила только пять
-    window.addListeners(mapPins);
+    window.showPins();
   };
 
   /* перемещение главного пина*/

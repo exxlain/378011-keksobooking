@@ -12,22 +12,11 @@
     pinElement.querySelector('img').src = pin.author.avatar;
     pinElement.style.left = pin.location.x - 20 + 'px';
     pinElement.style.top = pin.location.y - 58 + 'px';
+    pinElement.classList.add('hidden');
 
     return pinElement;
   };
 
-  window.displayItems = function (arr, action) {
-    for (var i = 0; i < arr.length; i++) {
-      arr[i].classList[action]('hidden');
-    }
-  };
-
-  var PIN_MAX_QUANTITY = 5;
-  window.displayPins = function (arr, action) {
-    for (var i = 0; i < PIN_MAX_QUANTITY; i++) {
-      arr[i].classList[action]('hidden');
-    }
-  };
 
   window.render = function (data) {
     var mapPins = mapWindow.querySelectorAll('.map__pin:not(.map__pin--main)');
@@ -40,8 +29,6 @@
     for (var i = 0; i < takeNumber; i++) {
       pinsListElement.appendChild(fillPin(data[i]));
     }
-    mapPins = mapWindow.querySelectorAll('.map__pin:not(.map__pin--main)');
-    window.displayItems(mapPins, 'add'); // спрятала все пины сразу после загрузки - при открытии страницы
   };
 
 
