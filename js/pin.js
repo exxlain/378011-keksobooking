@@ -15,7 +15,6 @@
 
   var mapWindow = document.querySelector('.map');
 
-
   var typeValue;
   var priceValue;
   var roomsValue;
@@ -68,11 +67,26 @@
     return rank;
   };
 
+  /* дополнительная сортировка по имени*/
+  var namesComparator = function (left, right) {
+    if (left > right) {
+      return 1;
+    } else if (left < right) {
+      return -1;
+    } else {
+      return 0;
+    }
+  };
+
   /* сортировка массива offers*/
   window.sortedOffers = [];
   var updateOffers = function () {
     window.sortedOffers = window.offers.sort(function (left, right) {
-      return getRank(right) - getRank(left);
+      var rankDiff = getRank(right) - getRank(left);
+      if (rankDiff === 0) {
+        rankDiff = namesComparator(left.name, right.name);
+      }
+      return rankDiff;
     });
     window.render(window.sortedOffers);
   };
