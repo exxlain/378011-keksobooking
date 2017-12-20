@@ -85,7 +85,7 @@
       return rankDiff;
     });
     window.render(window.sortedOffers);
-    /* window.showPins();*/
+    window.showPins();
   };
 
 
@@ -101,26 +101,22 @@
   housingType.addEventListener('change', function () {
     window.closeOpenPopup();
     typeValue = housingType.value;
-    updateOffers();
-    window.showPins();
+    window.debounce(updateOffers);
   });
   housingPrice.addEventListener('change', function () {
     window.closeOpenPopup();
     priceValue = housingPrice.value;
-    updateOffers();
-    window.showPins();
+    window.debounce(updateOffers);
   });
   housingRooms.addEventListener('change', function () {
     window.closeOpenPopup();
     roomsValue = housingRooms.value;
-    updateOffers();
-    window.showPins();
+    window.debounce(updateOffers);
   });
   housingGuests.addEventListener('change', function () {
     window.closeOpenPopup();
     guestsValue = housingGuests.value;
-    updateOffers();
-    window.showPins();
+    window.debounce(updateOffers);
   });
 
 
@@ -130,48 +126,42 @@
     if (filterWifi.checked) {
       wifiValue = filterWifi.value;
     }
-    updateOffers();
-    window.showPins();
+    window.debounce(updateOffers);
   });
   filterDishwasher.addEventListener('change', function () {
     window.closeOpenPopup();
     if (filterDishwasher.checked) {
       dishwasherValue = filterDishwasher.value;
     }
-    updateOffers();
-    window.showPins();
+    window.debounce(updateOffers);
   });
   filterParking.addEventListener('change', function () {
     window.closeOpenPopup();
     if (filterParking.checked) {
       parkingValue = filterParking.value;
     }
-    updateOffers();
-    window.showPins();
+    window.debounce(updateOffers);
   });
   filterWasher.addEventListener('change', function () {
     window.closeOpenPopup();
     if (filterWasher.checked) {
       washerValue = filterWasher.value;
     }
-    updateOffers();
-    window.showPins();
+    window.debounce(updateOffers);
   });
   filterElevator.addEventListener('change', function () {
     window.closeOpenPopup();
     if (filterElevator.checked) {
       elevatorValue = filterElevator.value;
     }
-    updateOffers();
-    window.showPins();
+    window.debounce(updateOffers);
   });
   filterConditioner.addEventListener('change', function () {
     window.closeOpenPopup();
     if (filterConditioner.checked) {
       conditionerValue = filterConditioner.value;
     }
-    updateOffers();
-    window.showPins();
+    window.debounce(updateOffers);
   });
 
 
@@ -179,7 +169,7 @@
   window.offers = [];
   var successHandler = function (data) {
     window.offers = data;
-    updateOffers();
+    window.render(window.offers);
   };
 
   /* стиль обработчика ошибки*/
