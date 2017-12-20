@@ -36,10 +36,9 @@
          pinsListElement.removeChild(el);
        });
      }
-
      var takeNumber = data.length;
      for(var i = 0; i < takeNumber; i++) {
-       pinsListElement.appendChild(fillPin(data[i]));
+      pinsListElement.appendChild(fillPin(data[i]));
      }
      var mapPins = mapWindow.querySelectorAll('.map__pin:not(.map__pin--main)');
      window.displayItems(mapPins, 'add'); //спрятала все пины сразу после загрузки - при открытии страницы

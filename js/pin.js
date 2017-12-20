@@ -86,23 +86,36 @@ var showPins = function(pins){
     window.displayPins(pins, 'remove');
     window.addListeners(pins);
 };
+
+ /* закрывает попап*/
+window.closeOpenPopup = function() {
+    var currentPopup = document.querySelector('.popup');
+        if (currentPopup) {
+          window.popupClose(currentPopup);
+          }
+ };
+
   /* обработчики на полях*/
   housingType.addEventListener('change', function () {
+    closeOpenPopup();
     typeValue = housingType.value;
     updateOffers();
     showPins(mapPins);
   });
   housingPrice.addEventListener('change', function () {
+    closeOpenPopup();
     priceValue = housingPrice.value;
     updateOffers();
     showPins(mapPins);
   });
     housingRooms.addEventListener('change', function () {
+    closeOpenPopup();
     roomsValue = housingRooms.value;
     updateOffers();
     showPins(mapPins);
   });
   housingGuests.addEventListener('change', function () {
+    closeOpenPopup();
     guestsValue = housingGuests.value;
     updateOffers();
     showPins(mapPins);
@@ -113,28 +126,31 @@ var showPins = function(pins){
 
   /* обработчики на чекбоксах*/
   filterWifi.addEventListener('change', function () {
+    closeOpenPopup();
     if (filterWifi.checked) {
       wifiValue = filterWifi.value;
     }
      updateOffers();
-    showPins(mapPins);
-
+     showPins(mapPins);
   });
   filterDishwasher.addEventListener('change', function () {
-     if (filterDishwasher.checked) {
+     closeOpenPopup();
+    if (filterDishwasher.checked) {
       dishwasherValue = filterDishwasher.value;
     }
     updateOffers();
     showPins(mapPins);
   });
   filterParking.addEventListener('change', function () {
-  if (filterParking.checked) {
+    closeOpenPopup();
+    if (filterParking.checked) {
       parkingValue = filterParking.value;
     }
     updateOffers();
     showPins(mapPins);
   });
   filterWasher.addEventListener('change', function () {
+    closeOpenPopup();
     if (filterWasher.checked) {
       washerValue = filterWasher.value;
     }
@@ -142,21 +158,21 @@ var showPins = function(pins){
     showPins(mapPins);
   });
   filterElevator.addEventListener('change', function () {
-     if (filterElevator.checked) {
+     closeOpenPopup();
+    if (filterElevator.checked) {
       elevatorValue = filterElevator.value;
     }
     updateOffers();
     showPins(mapPins);
   });
   filterConditioner.addEventListener('change', function () {
-     if ( filterConditioner.checked) {
+     closeOpenPopup();
+    if ( filterConditioner.checked) {
       conditionerValue =  filterConditioner.value;
     }
     updateOffers();
     showPins(mapPins);
   });
-
-
 
 
     /* обработчик успеха*/

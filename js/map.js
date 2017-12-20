@@ -36,7 +36,7 @@
   };
 
   /* закрывает попап*/
-  var popupClose = function (currentOffer) {
+  window.popupClose = function (currentOffer) {
     mapWindow.querySelector('.map__pin--active').classList.remove('map__pin--active');
     currentOffer.querySelector('.popup__close').removeEventListener('click', function () {
       popupClose(currentOffer);
