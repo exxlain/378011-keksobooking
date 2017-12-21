@@ -33,7 +33,7 @@
     });
     evt.preventDefault();
   });
-
+  /* обработчик на reset*/
   formReset.addEventListener('click', function (evt) {
     evt.preventDefault();
     noticeForm.reset();
@@ -123,7 +123,6 @@
       setErrorColor(inputName);
     }
   };
-
   /* проверка поля заголовок*/
   inputTitle.addEventListener('invalid', function () {
     resetError(inputTitle);
@@ -131,13 +130,11 @@
     validityCheck(inputTitle, 'tooLong', 'Заголовок объявления не должнен превышать 100 символов');
     validityCheck(inputTitle, 'valueMissing', 'Обязательное поле');
   });
-
   /* проверка поля адрес*/
   inputAddress.addEventListener('invalid', function () {
     resetError(inputAddress);
     validityCheck(inputAddress, 'valueMissing', 'Обязательное поле');
   });
-
   /* проверка поля цена за ночь*/
   pricePerNight.addEventListener('invalid', function () {
     resetError(pricePerNight);

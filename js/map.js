@@ -28,7 +28,6 @@
       onMainPinMouseup();
     }
   });
-
   /* обработчик enter на крестике*/
   var onCloseElementEnterPress = function (evt, currentOffer) {
     if (evt.keyCode === ENTER_KEYCODE) {
@@ -41,22 +40,21 @@
       window.popupClose(currentOffer);
     }
   };
-
+  /* функция для обработчика esc*/
+  var handleEscListenerFunction = function (evt) {
+    onPopupEscPress(evt, document.querySelector('.popup'));
+  };
   /* отображение попапа*/
   var popupOpen = function (obj) {
     var cardElement = window.fillCard(obj);
-
     mapWindow.insertBefore(cardElement, mapFiltersElement);
-
     cardElement.querySelector('.popup__close').addEventListener('click', function () {
       window.popupClose(cardElement);
     });
     cardElement.querySelector('.popup__close').addEventListener('keydown', function (evt) {
       onCloseElementEnterPress(evt, cardElement);
     });
-    document.addEventListener('keydown', function (evt) {
-      onPopupEscPress(evt, document.querySelector('.popup'));
-    });
+    document.addEventListener('keydown', handleEscListenerFunction);
   };
 
   /* навешивает обработчики на пины*/
@@ -72,21 +70,21 @@
       });
     });
   };
-
-  var displayPins = function (arr, action) {
+  /* убирает класс hidden у пинов*/
+  var displayPins = function (arr) {
     for (var i = 0; i < PIN_MAX_QUANTITY; i++) {
-      arr[i].classList[action]('hidden');
+      arr[i].classList.remove('hidden');
     }
   };
 
   /* показывает пины и навешивает обработчики*/
   window.showPins = function () {
     var mapPins = mapWindow.querySelectorAll('.map__pin:not(.map__pin--main)');
-    displayPins(mapPins, 'remove');
+    displayPins(mapPins);
     window.addPinsListeners(mapPins);
   };
 
-  /* активирует форму и карту, показывает пины, добавляет им обработчики*/
+  /* активирует форму и карту, показывает пины*/
   var onMainPinMouseup = function () {
     mapWindow.classList.remove('map--faded');
     noticeForm.classList.remove('notice__form--disabled');
@@ -97,7 +95,6 @@
   };
 
   /* Перемещение главного пина*/
-
   /*  функция перемещения главного пина*/
   var onMainPinMousedown = function (evt) {
     evt.preventDefault();
@@ -146,20 +143,24 @@
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   };
+
   /* обработчик перемещения главного пина*/
   mainPin.addEventListener('mousedown', onMainPinMousedown);
 
+
   /* закрывает попап*/
   window.popupClose = function (currentOffer) {
-    mapWindow.querySelector('.map__pin--active').classList.remove('map__pin--active');
+    var mapActive = mapWindow.querySelector('.map__pin--active');
+    if (mapActive) {
+      mapActive.classList.remove('map__pin--active');
+    }
     currentOffer.querySelector('.popup__close').removeEventListener('click', function () {
       window.popupClose(currentOffer);
     });
     currentOffer.querySelector('.popup__close').removeEventListener('keydown', function (evt) {
       onCloseElementEnterPress(evt, currentOffer);
     });
-    document.removeEventListener('keydown', onPopupEscPress);
-
+    document.removeEventListener('keydown', handleEscListenerFunction);
     mapWindow.removeChild(currentOffer);
   };
 

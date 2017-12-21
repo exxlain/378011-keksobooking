@@ -11,7 +11,7 @@
     return newLi;
   };
 
-  /* создает элемент picture для фотографий*/
+  /* создает элемент picture*/
   var createPicture = function (picture) {
     var newLi = document.createElement('li');
     newLi.innerHTML = '<img src="' + picture + '" width="42" height="42">';
@@ -49,12 +49,12 @@
 
     var featurePlace = cardElement.querySelector('.popup__features');
     featurePlace.innerHTML = '';
-    var featureFragment = window.templateutil.getFragment(card.offer.features, createFeature);
+    var featureFragment = window.getFragment(card.offer.features, createFeature);
     featurePlace.appendChild(featureFragment);
 
     var pictirePlace = cardElement.querySelector('.popup__pictures');
     pictirePlace.innerHTML = '';
-    var pictureFragment = window.templateutil.getFragment(card.offer.photos, createPicture);
+    var pictureFragment = window.getFragment(card.offer.photos, createPicture);
     pictirePlace.appendChild(pictureFragment);
 
     return cardElement;

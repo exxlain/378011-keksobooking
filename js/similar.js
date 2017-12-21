@@ -43,7 +43,6 @@
     if (currentOffer.offer.guests === +guestsValue) {
       rank += 1;
     }
-
     var featuresItem;
     for (var i = 0; i < currentOffer.offer.features.length; i++) {
       featuresItem = currentOffer.offer.features[i];
