@@ -8,9 +8,8 @@
       if (currentPopup) {
         if (typeof callBackClose === 'function') {
           callBackClose(currentPopup);
+          activeMapPin.classList.remove('map__pin--active');
         }
-
-        activeMapPin.classList.remove('map__pin--active');
       }
       activeMapPin = evt.currentTarget;
       activeMapPin.classList.add('map__pin--active');

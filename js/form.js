@@ -10,6 +10,20 @@
   var roomNumber = noticeForm.querySelector('#room_number');
   var capacity = noticeForm.querySelector('#capacity');
   var formReset = noticeForm.querySelector('.form__reset');
+  /* соответствие  типов недвижимости и минимальной цены*/
+  var offerTypePrice = {
+    flat: 1000,
+    bungalo: 0,
+    house: 5000,
+    palace: 10000
+  };
+  /* соответствие  количества комнат и количества гостей*/
+  var roomsCapacity = {
+    '1': 1,
+    '2': 2,
+    '3': 3,
+    '100': 0
+  };
 
   /* обработчик отправки формы*/
   noticeForm.addEventListener('submit', function (evt) {
@@ -19,12 +33,12 @@
     });
     evt.preventDefault();
   });
-
-formReset.addEventListener('click', function (evt) {
-      evt.preventDefault();
-      noticeForm.reset();
-      inputAddress.value = '568, 288';
-    });
+  /* обработчик на reset*/
+  formReset.addEventListener('click', function (evt) {
+    evt.preventDefault();
+    noticeForm.reset();
+    inputAddress.value = '568, 288';
+  });
 
   /* функция для создания массивов из значений value*/
   var getArray = function (element) {
@@ -59,14 +73,6 @@ formReset.addEventListener('click', function (evt) {
   /* получение массива типов жилья из значений value*/
   var optionsTypeArr = getArray(apartmentType);
 
-  /* соответствие  типов недвижимости и минимальной цены*/
-  var offerTypePrice = {
-    flat: 1000,
-    bungalo: 0,
-    house: 5000,
-    palace: 10000
-  };
-
   /* функция получения массива из значений свойств объекта*/
   var getValueObjectArr = function (obj) {
     var valuesArray = Object.values(obj);
@@ -90,14 +96,6 @@ formReset.addEventListener('click', function (evt) {
   /* получение массива из значений количества комнат из значений value*/
   var roomNumberArr = getArray(roomNumber);
 
-  /* соответствие  количества комнат и количества гостей*/
-  var roomsCapacity = {
-    '1': 1,
-    '2': 2,
-    '3': 3,
-    '100': 0
-  };
-
   /* получение массива из значений количества гостей (из объекта) */
   var capacityArr = getValueObjectArr(roomsCapacity);
 
@@ -106,8 +104,7 @@ formReset.addEventListener('click', function (evt) {
     window.synchronizeFields(roomNumber, capacity, roomNumberArr, capacityArr, syncValues);
   });
 
-
-  /* валидация полей формы*/
+  /* Валидация полей формы*/
   /* устанавливает цвет рамки*/
   var setErrorColor = function (element) {
     element.style.outline = '2px solid red';
@@ -126,7 +123,6 @@ formReset.addEventListener('click', function (evt) {
       setErrorColor(inputName);
     }
   };
-
   /* проверка поля заголовок*/
   inputTitle.addEventListener('invalid', function () {
     resetError(inputTitle);
@@ -134,14 +130,11 @@ formReset.addEventListener('click', function (evt) {
     validityCheck(inputTitle, 'tooLong', 'Заголовок объявления не должнен превышать 100 символов');
     validityCheck(inputTitle, 'valueMissing', 'Обязательное поле');
   });
-
   /* проверка поля адрес*/
   inputAddress.addEventListener('invalid', function () {
     resetError(inputAddress);
     validityCheck(inputAddress, 'valueMissing', 'Обязательное поле');
-
   });
-
   /* проверка поля цена за ночь*/
   pricePerNight.addEventListener('invalid', function () {
     resetError(pricePerNight);

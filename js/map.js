@@ -3,13 +3,20 @@
 
   var ENTER_KEYCODE = 13;
   var ESC_KEYCODE = 27;
+  var PIN_MAX_QUANTITY = 5;
+  /* ограничения перемещения главного пина по высоте*/
+  var MIN_Y = 100;
+  var MAX_Y = 500;
+  /* размеры главного пина*/
+  var MAIN_PIN_HEIGHT = 65;
+  var MAIN_PIN_WIDTH = 65;
+  var MAIN_TAIL_HEIGHT = 22;
   var mapWindow = document.querySelector('.map');
   var mapFiltersElement = mapWindow.querySelector('.map__filters-container');
   var noticeForm = document.querySelector('.notice__form');
   var inputAddress = noticeForm.querySelector('#address');
   var mainPin = mapWindow.querySelector('.map__pin--main');
   var allFieldsets = noticeForm.querySelectorAll('fieldset');
-
 
   /* навешивает обработчик мыши на основной пин*/
   mainPin.addEventListener('mouseup', function () {
@@ -21,85 +28,73 @@
       onMainPinMouseup();
     }
   });
-
   /* обработчик enter на крестике*/
   var onCloseElementEnterPress = function (evt, currentOffer) {
     if (evt.keyCode === ENTER_KEYCODE) {
-      popupClose(currentOffer);
+      window.popupClose(currentOffer);
     }
   };
   /* обработчик события закрытия попапа по esc*/
   var onPopupEscPress = function (evt, currentOffer) {
     if (evt.keyCode === ESC_KEYCODE) {
-      popupClose(currentOffer);
+      window.popupClose(currentOffer);
     }
   };
-
-  /* закрывает попап*/
-  var popupClose = function (currentOffer) {
-    mapWindow.querySelector('.map__pin--active').classList.remove('map__pin--active');
-    currentOffer.querySelector('.popup__close').removeEventListener('click', function () {
-      popupClose(currentOffer);
-    });
-    currentOffer.querySelector('.popup__close').removeEventListener('keydown', function (evt) {
-      onCloseElementEnterPress(evt, currentOffer);
-    });
-    document.removeEventListener('keydown', function (evt) {
-      onPopupEscPress(evt, currentOffer);
-    });
-    mapWindow.removeChild(currentOffer);
+  /* функция для обработчика esc*/
+  var handleEscListenerFunction = function (evt) {
+    onPopupEscPress(evt, document.querySelector('.popup'));
   };
   /* отображение попапа*/
   var popupOpen = function (obj) {
-
- var cardElement = window.fillCard(obj);
-
+    var cardElement = window.fillCard(obj);
     mapWindow.insertBefore(cardElement, mapFiltersElement);
-
     cardElement.querySelector('.popup__close').addEventListener('click', function () {
-      popupClose(cardElement);
+      window.popupClose(cardElement);
     });
     cardElement.querySelector('.popup__close').addEventListener('keydown', function (evt) {
       onCloseElementEnterPress(evt, cardElement);
     });
-    document.addEventListener('keydown', function (evt) {
-      onPopupEscPress(evt, document.querySelector('.popup'));
-    });
+    document.addEventListener('keydown', handleEscListenerFunction);
   };
 
-  /* активирует форму и карту, показывает пины, добавляет им обработчики*/
+  /* навешивает обработчики на пины*/
+  window.addPinsListeners = function (pins) {
+    pins.forEach(function (el, j) {
+      el.addEventListener('mouseup', function (evt) {
+        window.show.showCard(evt, window.offers[j], popupOpen, window.popupClose);
+      });
+      el.addEventListener('keydown', function (evt) {
+        if (evt.keyCode === ENTER_KEYCODE) {
+          window.show.showCard(evt, window.offers[j], popupOpen, window.popupClose);
+        }
+      });
+    });
+  };
+  /* убирает класс hidden у пинов*/
+  var displayPins = function (arr) {
+    for (var i = 0; i < PIN_MAX_QUANTITY; i++) {
+      arr[i].classList.remove('hidden');
+    }
+  };
+
+  /* показывает пины и навешивает обработчики*/
+  window.showPins = function () {
+    var mapPins = mapWindow.querySelectorAll('.map__pin:not(.map__pin--main)');
+    displayPins(mapPins);
+    window.addPinsListeners(mapPins);
+  };
+
+  /* активирует форму и карту, показывает пины*/
   var onMainPinMouseup = function () {
     mapWindow.classList.remove('map--faded');
     noticeForm.classList.remove('notice__form--disabled');
     for (var i = 0; i < allFieldsets.length; i++) {
       allFieldsets[i].removeAttribute('disabled');
     }
-
-    var mapPins = mapWindow.querySelectorAll('.map__pin:not(.map__pin--main)');
-    window.displayItems(mapPins, 'visible');
-
-    mapPins.forEach(function (el, j) {
-      el.addEventListener('mouseup', function (evt) {
-        window.show.showCard(evt, window.offers[j], popupOpen, popupClose);
-      });
-      el.addEventListener('keydown', function (evt) {
-        if (evt.keyCode === ENTER_KEYCODE) {
-          window.show.showCard(evt, window.offers[j], popupOpen, popupClose);
-        }
-      });
-    });
+    window.showPins();
   };
 
-  /* перемещение главного пина*/
-  /* ограничения перемещения главного пина по высоте*/
-  var MIN_Y = 100;
-  var MAX_Y = 500;
-  /* размеры главного пина*/
-
-  var MAIN_PIN_HEIGHT = 65;
-  var MAIN_PIN_WIDTH = 65;
-  var MAIN_TAIL_HEIGHT = 22;
-
+  /* Перемещение главного пина*/
   /*  функция перемещения главного пина*/
   var onMainPinMousedown = function (evt) {
     evt.preventDefault();
@@ -148,7 +143,25 @@
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   };
+
   /* обработчик перемещения главного пина*/
   mainPin.addEventListener('mousedown', onMainPinMousedown);
+
+
+  /* закрывает попап*/
+  window.popupClose = function (currentOffer) {
+    var activeMapPin = mapWindow.querySelector('.map__pin--active');
+    if (activeMapPin) {
+      activeMapPin.classList.remove('map__pin--active');
+    }
+    currentOffer.querySelector('.popup__close').removeEventListener('click', function () {
+      window.popupClose(currentOffer);
+    });
+    currentOffer.querySelector('.popup__close').removeEventListener('keydown', function (evt) {
+      onCloseElementEnterPress(evt, currentOffer);
+    });
+    document.removeEventListener('keydown', handleEscListenerFunction);
+    mapWindow.removeChild(currentOffer);
+  };
 
 })();
