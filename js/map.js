@@ -150,9 +150,9 @@
 
   /* закрывает попап*/
   window.popupClose = function (currentOffer) {
-    var mapActive = mapWindow.querySelector('.map__pin--active');
-    if (mapActive) {
-      mapActive.classList.remove('map__pin--active');
+    var activeMapPin = mapWindow.querySelector('.map__pin--active');
+    if (activeMapPin) {
+      activeMapPin.classList.remove('map__pin--active');
     }
     currentOffer.querySelector('.popup__close').removeEventListener('click', function () {
       window.popupClose(currentOffer);
