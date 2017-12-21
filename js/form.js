@@ -10,6 +10,20 @@
   var roomNumber = noticeForm.querySelector('#room_number');
   var capacity = noticeForm.querySelector('#capacity');
   var formReset = noticeForm.querySelector('.form__reset');
+  /* соответствие  типов недвижимости и минимальной цены*/
+  var offerTypePrice = {
+    flat: 1000,
+    bungalo: 0,
+    house: 5000,
+    palace: 10000
+  };
+  /* соответствие  количества комнат и количества гостей*/
+  var roomsCapacity = {
+    '1': 1,
+    '2': 2,
+    '3': 3,
+    '100': 0
+  };
 
   /* обработчик отправки формы*/
   noticeForm.addEventListener('submit', function (evt) {
@@ -59,14 +73,6 @@
   /* получение массива типов жилья из значений value*/
   var optionsTypeArr = getArray(apartmentType);
 
-  /* соответствие  типов недвижимости и минимальной цены*/
-  var offerTypePrice = {
-    flat: 1000,
-    bungalo: 0,
-    house: 5000,
-    palace: 10000
-  };
-
   /* функция получения массива из значений свойств объекта*/
   var getValueObjectArr = function (obj) {
     var valuesArray = Object.values(obj);
@@ -90,14 +96,6 @@
   /* получение массива из значений количества комнат из значений value*/
   var roomNumberArr = getArray(roomNumber);
 
-  /* соответствие  количества комнат и количества гостей*/
-  var roomsCapacity = {
-    '1': 1,
-    '2': 2,
-    '3': 3,
-    '100': 0
-  };
-
   /* получение массива из значений количества гостей (из объекта) */
   var capacityArr = getValueObjectArr(roomsCapacity);
 
@@ -106,8 +104,7 @@
     window.synchronizeFields(roomNumber, capacity, roomNumberArr, capacityArr, syncValues);
   });
 
-
-  /* валидация полей формы*/
+  /* Валидация полей формы*/
   /* устанавливает цвет рамки*/
   var setErrorColor = function (element) {
     element.style.outline = '2px solid red';
@@ -139,7 +136,6 @@
   inputAddress.addEventListener('invalid', function () {
     resetError(inputAddress);
     validityCheck(inputAddress, 'valueMissing', 'Обязательное поле');
-
   });
 
   /* проверка поля цена за ночь*/

@@ -2,7 +2,6 @@
 
 (function () {
   window.templateutil = {
-    /* создает фрагмент для вставки */
     getFragment: function (arr, func) {
       var fragment = document.createDocumentFragment();
       for (var i = 0; i < arr.length; i++) {

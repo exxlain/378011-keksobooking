@@ -14,7 +14,7 @@
   /* создает элемент picture для фотографий*/
   var createPicture = function (picture) {
     var newLi = document.createElement('li');
-    newLi.innerHTML = '<img src="' + picture + '">';
+    newLi.innerHTML = '<img src="' + picture + '" width="42" height="42">';
     return newLi;
   };
 
@@ -57,13 +57,6 @@
     var pictureFragment = window.templateutil.getFragment(card.offer.photos, createPicture);
     pictirePlace.appendChild(pictureFragment);
 
-    var pictures = pictirePlace.querySelectorAll('img');
-    if (pictures) {
-      pictures.forEach(function (el) {
-        el.style.width = '42px';
-        el.style.height = '42px';
-      });
-    }
     return cardElement;
   };
 

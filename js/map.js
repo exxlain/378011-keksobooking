@@ -3,13 +3,20 @@
 
   var ENTER_KEYCODE = 13;
   var ESC_KEYCODE = 27;
+  var PIN_MAX_QUANTITY = 5;
+  /* ограничения перемещения главного пина по высоте*/
+  var MIN_Y = 100;
+  var MAX_Y = 500;
+  /* размеры главного пина*/
+  var MAIN_PIN_HEIGHT = 65;
+  var MAIN_PIN_WIDTH = 65;
+  var MAIN_TAIL_HEIGHT = 22;
   var mapWindow = document.querySelector('.map');
   var mapFiltersElement = mapWindow.querySelector('.map__filters-container');
   var noticeForm = document.querySelector('.notice__form');
   var inputAddress = noticeForm.querySelector('#address');
   var mainPin = mapWindow.querySelector('.map__pin--main');
   var allFieldsets = noticeForm.querySelectorAll('fieldset');
-
 
   /* навешивает обработчик мыши на основной пин*/
   mainPin.addEventListener('mouseup', function () {
@@ -34,7 +41,6 @@
       window.popupClose(currentOffer);
     }
   };
-
 
   /* отображение попапа*/
   var popupOpen = function (obj) {
@@ -67,7 +73,6 @@
     });
   };
 
-  var PIN_MAX_QUANTITY = 5;
   var displayPins = function (arr, action) {
     for (var i = 0; i < PIN_MAX_QUANTITY; i++) {
       arr[i].classList[action]('hidden');
@@ -91,15 +96,7 @@
     window.showPins();
   };
 
-  /* перемещение главного пина*/
-  /* ограничения перемещения главного пина по высоте*/
-  var MIN_Y = 100;
-  var MAX_Y = 500;
-  /* размеры главного пина*/
-
-  var MAIN_PIN_HEIGHT = 65;
-  var MAIN_PIN_WIDTH = 65;
-  var MAIN_TAIL_HEIGHT = 22;
+  /* Перемещение главного пина*/
 
   /*  функция перемещения главного пина*/
   var onMainPinMousedown = function (evt) {
@@ -161,9 +158,8 @@
     currentOffer.querySelector('.popup__close').removeEventListener('keydown', function (evt) {
       onCloseElementEnterPress(evt, currentOffer);
     });
-    document.removeEventListener('keydown', function (evt) {
-      onPopupEscPress(evt, currentOffer);
-    });
+    document.removeEventListener('keydown', onPopupEscPress);
+
     mapWindow.removeChild(currentOffer);
   };
 
