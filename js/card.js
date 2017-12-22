@@ -14,7 +14,11 @@
   /* создает элемент picture*/
   var createPicture = function (picture) {
     var newLi = document.createElement('li');
-    newLi.innerHTML = '<img src="' + picture + '" width="42" height="42">';
+    var newImg = document.createElement('img');
+    newImg.src = picture;
+    newImg.style.width = '42px';
+    newImg.style.height = '42px';
+    newLi.appendChild(newImg);
     return newLi;
   };
 
