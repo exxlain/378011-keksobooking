@@ -1,6 +1,5 @@
 'use strict';
 (function () {
-
   var templateElement = document.querySelector('template').content;
   var mapCardTemplate = templateElement.querySelector('.map__card');
 
