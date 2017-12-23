@@ -1,16 +1,28 @@
 'use strict';
 (function () {
 
-  var ENTER_KEYCODE = 13;
-  var ESC_KEYCODE = 27;
+  var Keycode = {
+    ENTER: 13,
+    ESC: 27
+  };
+  /* максимальное количество пинов*/
   var PIN_MAX_QUANTITY = 5;
-  /* ограничения перемещения главного пина по высоте*/
-  var MIN_Y = 100;
-  var MAX_Y = 500;
+
+  /* ограничения перемещения главного пина по высоте и ширине */
+  var MainPinCoordinate = {
+    X_MIN: 0,
+    X_MAX: 1200,
+    Y_MIN: 100,
+    Y_MAX: 650
+  };
+
   /* размеры главного пина*/
-  var MAIN_PIN_HEIGHT = 65;
-  var MAIN_PIN_WIDTH = 65;
-  var MAIN_TAIL_HEIGHT = 22;
+  var MainPinSize = {
+    WIDTH: 65,
+    HEIGHT: 65,
+    ARROW_HEIGHT: 22,
+  };
+
   var mapWindow = document.querySelector('.map');
   var mapFiltersElement = mapWindow.querySelector('.map__filters-container');
   var noticeForm = document.querySelector('.notice__form');
@@ -24,19 +36,19 @@
   });
   /* навешивает обработчик enter на основной пин*/
   mainPin.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === ENTER_KEYCODE) {
+    if (evt.keyCode === Keycode.ENTER) {
       onMainPinMouseup();
     }
   });
   /* обработчик enter на крестике*/
   var onCloseElementEnterPress = function (evt, currentOffer) {
-    if (evt.keyCode === ENTER_KEYCODE) {
+    if (evt.keyCode === Keycode.ENTER) {
       window.popupClose(currentOffer);
     }
   };
   /* обработчик события закрытия попапа по esc*/
   var onPopupEscPress = function (evt, currentOffer) {
-    if (evt.keyCode === ESC_KEYCODE) {
+    if (evt.keyCode === Keycode.ESC) {
       window.popupClose(currentOffer);
     }
   };
@@ -64,7 +76,7 @@
         window.show.showCard(evt, window.offers[j], popupOpen, window.popupClose);
       });
       el.addEventListener('keydown', function (evt) {
-        if (evt.keyCode === ENTER_KEYCODE) {
+        if (evt.keyCode === Keycode.ENTER) {
           window.show.showCard(evt, window.offers[j], popupOpen, window.popupClose);
         }
       });
@@ -121,15 +133,17 @@
         y: mainPin.offsetTop - shift.y
       };
 
+      if (currentCoords.x >= MainPinCoordinate.X_MIN && currentCoords.x <= MainPinCoordinate.X_MAX) {
+        mainPin.style.left = currentCoords.x + 'px';
+      }
 
-      mainPin.style.left = currentCoords.x + 'px';
-      if (currentCoords.y >= MIN_Y && currentCoords.y <= MAX_Y) {
+      if (currentCoords.y >= MainPinCoordinate.Y_MIN && currentCoords.y <= MainPinCoordinate.Y_MAX) {
         mainPin.style.top = currentCoords.y + 'px';
       }
 
 
-      var addressX = Math.round(currentCoords.x - (MAIN_PIN_WIDTH / 2));
-      var addressY = currentCoords.y - (MAIN_PIN_HEIGHT + MAIN_TAIL_HEIGHT);
+      var addressX = currentCoords.x;
+      var addressY = currentCoords.y - (MainPinSize.HEIGHT + MainPinSize.ARROW_HEIGHT);
       inputAddress.value = addressX + ', ' + addressY;
     };
 
