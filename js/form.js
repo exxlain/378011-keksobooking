@@ -10,6 +10,11 @@
   var roomNumber = noticeForm.querySelector('#room_number');
   var capacity = noticeForm.querySelector('#capacity');
   var formReset = noticeForm.querySelector('.form__reset');
+  /* начальные координаты пина*/
+  var AddressCooridinates = {
+    X: 568,
+    Y: 288
+  };
   /* соответствие  типов недвижимости и минимальной цены*/
   var offerTypePrice = {
     flat: 1000,
@@ -29,7 +34,7 @@
   noticeForm.addEventListener('submit', function (evt) {
     window.backend.save(new FormData(noticeForm), function () {
       noticeForm.reset();
-      inputAddress.value = '568, 288';
+      inputAddress.value = AddressCooridinates.X + ', ' + AddressCooridinates.Y;
     });
     evt.preventDefault();
   });
@@ -37,7 +42,7 @@
   formReset.addEventListener('click', function (evt) {
     evt.preventDefault();
     noticeForm.reset();
-    inputAddress.value = '568, 288';
+    inputAddress.value = AddressCooridinates.X + ', ' + AddressCooridinates.Y;
   });
 
   /* функция для создания массивов из значений value*/
