@@ -140,10 +140,25 @@
       if (currentCoords.y >= MainPinCoordinate.Y_MIN && currentCoords.y <= MainPinCoordinate.Y_MAX) {
         mainPin.style.top = currentCoords.y + 'px';
       }
+      /* ограничение координат выводящихся в поле адрес*/
+      var addressX;
+      if (currentCoords.x < MainPinCoordinate.X_MIN) {
+        addressX = MainPinCoordinate.X_MIN;
+      } else if (currentCoords.x > MainPinCoordinate.X_MAX) {
+        addressX = MainPinCoordinate.X_MAX;
+      } else {
+        addressX = currentCoords.x;
+      }
+      var addressY;
+      var addressYCorrections = MainPinSize.HEIGHT + MainPinSize.ARROW_HEIGHT;
+      if ((currentCoords.y - addressYCorrections) < MainPinCoordinate.Y_MIN) {
+        addressY = MainPinCoordinate.Y_MIN - addressYCorrections;
+      } else if ((currentCoords.y - addressYCorrections) > MainPinCoordinate.Y_MAX) {
+        addressY = MainPinCoordinate.Y_MAX - addressYCorrections;
+      } else {
+        addressY = currentCoords.y - addressYCorrections;
+      }
 
-
-      var addressX = currentCoords.x;
-      var addressY = currentCoords.y - (MainPinSize.HEIGHT + MainPinSize.ARROW_HEIGHT);
       inputAddress.value = addressX + ', ' + addressY;
     };
 

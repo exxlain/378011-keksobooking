@@ -21,12 +21,13 @@
     return newLi;
   };
 
-  /* заменяет английский на русский в названии удобства*/
+
   var EnglishTypeNameToRussian = {
     'flat': 'Квартира',
     'house': 'Дом',
     'bungalo': 'Бунгало'
   };
+    /* заменяет английский на русский в названии удобства*/
   var getOfferType = function (obj, EnglishTypeName) {
     return EnglishTypeNameToRussian[EnglishTypeName];
   };
