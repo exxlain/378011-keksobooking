@@ -36,21 +36,16 @@
   });
   /* навешивает обработчик enter на основной пин*/
   mainPin.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === Keycode.ENTER) {
-      onMainPinMouseup();
-    }
+    window.util.isEnterEvent(evt, onMainPinMouseup);
   });
+
   /* обработчик enter на крестике*/
-  var onCloseElementEnterPress = function (evt, currentOffer) {
-    if (evt.keyCode === Keycode.ENTER) {
-      window.popupClose(currentOffer);
-    }
+  var onCloseElementEnterPress = function (evt) {
+    window.util.isEnterEvent(evt, window.popupClose);
   };
   /* обработчик события закрытия попапа по esc*/
-  var onPopupEscPress = function (evt, currentOffer) {
-    if (evt.keyCode === Keycode.ESC) {
-      window.popupClose(currentOffer);
-    }
+  var onPopupEscPress = function (evt) {
+    window.util.isEscEvent(evt, window.popupClose);
   };
   /* функция для обработчика esc*/
   var handleEscListenerFunction = function (evt) {
@@ -178,19 +173,20 @@
 
 
   /* закрывает попап*/
-  window.popupClose = function (currentOffer) {
+  window.popupClose = function () {
     var activeMapPin = mapWindow.querySelector('.map__pin--active');
     if (activeMapPin) {
       activeMapPin.classList.remove('map__pin--active');
     }
-    currentOffer.querySelector('.popup__close').removeEventListener('click', function () {
-      window.popupClose(currentOffer);
+    var currentPopup = document.querySelector('.popup');
+    currentPopup.querySelector('.popup__close').removeEventListener('click', function () {
+      window.popupClose(currentPopup);
     });
-    currentOffer.querySelector('.popup__close').removeEventListener('keydown', function (evt) {
-      onCloseElementEnterPress(evt, currentOffer);
+    currentPopup.querySelector('.popup__close').removeEventListener('keydown', function (evt) {
+      onCloseElementEnterPress(evt, currentPopup);
     });
     document.removeEventListener('keydown', handleEscListenerFunction);
-    mapWindow.removeChild(currentOffer);
+    mapWindow.removeChild(currentPopup);
   };
 
 })();
