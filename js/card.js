@@ -21,21 +21,15 @@
     return newLi;
   };
 
-  /* заменяет английский на русский в названии удобства*/
-  var getOfferType = function (type) {
-    var offerType;
-    switch (type) {
-      case 'flat':
-        offerType = 'Квартира';
-        break;
-      case 'house':
-        offerType = 'Дом';
-        break;
-      case 'bungalo':
-        offerType = 'Бунгало';
-        break;
-    }
-    return offerType;
+
+  var EnglishTypeNameToRussian = {
+    'flat': 'Квартира',
+    'house': 'Дом',
+    'bungalo': 'Бунгало'
+  };
+    /* заменяет английский на русский в названии удобства*/
+  var getOfferType = function (obj, EnglishTypeName) {
+    return EnglishTypeNameToRussian[EnglishTypeName];
   };
 
   /* заполняет карточку данными*/
@@ -44,7 +38,7 @@
     cardElement.querySelector('h3').textContent = card.offer.title;
     cardElement.querySelector('p small').textContent = card.offer.address;
     cardElement.querySelector('.popup__price').innerHTML = card.offer.price + '<span>&#x20bd;</span>' + '/ночь';
-    cardElement.querySelector('h4').textContent = getOfferType(card.offer.type);
+    cardElement.querySelector('h4').textContent = getOfferType(EnglishTypeNameToRussian, card.offer.type);
     cardElement.querySelector('p:nth-of-type(3)').textContent = card.offer.rooms + ' комнаты для ' + card.offer.guests + ' гостей';
     cardElement.querySelector('p:nth-of-type(4)').textContent = 'Заезд после ' + card.offer.checkin + ' , выезд до ' + card.offer.checkout;
     cardElement.querySelector('p:last-of-type').textContent = card.offer.description;
